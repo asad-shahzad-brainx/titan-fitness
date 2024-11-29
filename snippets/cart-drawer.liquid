@@ -282,6 +282,57 @@
                             assign has_vol_pricing = true
                           endif
                         -%}
+                        {% assign component_quantities = item.variant.metafields.custom.component_quantities.value %}
+                        {% assign component_references = item.variant.metafields.custom.component_reference.value %}
+
+                        {% if component_references and component_quantities %}
+                          {% assign bundle_size = 0 %}
+                          {% capture accordion_content %}
+                            {% for component in  component_references %}
+                              {% assign bundle_size = bundle_size | plus: 1  %}
+                              {% assign bundle_quantity = component_quantities[forloop.index0] | times: item.quantity %}
+                              <div class="accordion__content-inner">
+                                {% if component.image %}
+                                  {% comment %} Leave empty space due to a:empty CSS display: none rule {% endcomment %}
+                                  <a href="{{ component.url }}" class="cart-item__link" tabindex="-1" aria-hidden="true"></a>
+                                  <img
+                                    class="cart-item__image"
+                                    src="{{ component.image | image_url: width: 300 }}"
+                                    alt="{{ component.image.alt | escape }}"
+                                    loading="lazy"
+                                    width="150"
+                                    height="{{ 150 | divided_by: component.image.aspect_ratio | ceil }}"
+                                    focusable="false"
+                                  >                                  
+                                {% endif %}
+                                <a href="{{ component.url }}" class="cart-item__name h5 break">
+                                  {{ bundle_quantity }} x {{ component.product.title }}
+                                </a>
+                              </div>
+                            {% endfor %}
+                          {% endcapture %}
+
+                          <td class="cart-item__details cart-item__details-bundle__accordion" role="cell" headers="CartDrawer-BundleProductImage">
+                            <div class="bundle__accordion">
+                              <details id="Details-{{ section.id }}">
+                                <summary>
+                                  <div class="summary__title"> 
+                                    <p class="p accordion__title show-accordion__title inline-richtext">
+                                      Show {{ bundle_size }} Items
+                                    </p>
+                                    <p class="p accordion__title hide-accordion__title inline-richtext">
+                                      Hide {{ bundle_size }} Items
+                                    </p>
+                                  </div>
+                                  {% render 'icon-caret' %}
+                                </summary>
+                                <div class="accordion__content rte" id="BundleAccordion-{{ section.id }}">
+                                  {{ accordion_content }}
+                                </div>
+                              </details>
+                            </div>
+                          </td>
+                        {% endif %}
                         <td
                           class="cart-item__quantity {% if has_qty_rules or has_vol_pricing %} cart-item__quantity--info{% endif %}"
                           role="cell"
