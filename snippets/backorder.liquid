@@ -1,0 +1,22 @@
+{% comment %}
+  Render a out of stock text
+
+  usage:
+  {% render
+    'backorder',
+    backOrder: backOrder
+  %}
+{% endcomment %}
+
+<div class="c-backOrder">
+  <div class="c-backOrder__icon">
+    {% render 'icon-backorder', classes: 'o-icon__backOrder' %}
+  </div>
+  <p class="{{ classes }} c-backOrder__message">
+    Backorder
+    <span class="c-backOrder__messageInner">
+      {%  assign formatted_date = backOrder | date: '%m/%d/%Y' %}
+      {{ 'products.product.back_order_label' | t: date: formatted_date }}
+    </span>
+  </p>
+</div>

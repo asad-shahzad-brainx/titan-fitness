@@ -1,0 +1,81 @@
+{% assign hasColors = false %}
+{% for option in card_product.options_with_values %}
+  {% if option.name contains 'color' or option.name contains 'Color' %}
+    {% assign hasColors = true %}
+  {% endif %}
+{% endfor %}
+
+{% assign newArray = '' %}
+{% if hasColors %}
+  {% for option in card_product.options_with_values %}
+    {% if option.name contains 'color' or option.name contains 'Color' %}
+      {% for value in option.values %}
+        {% if forloop.index <= 4 %}
+          {% assign newArray = newArray | append: value | append: ',' %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+  {% assign newArray = newArray | split: ',' | join: ',' | remove: '' %}
+{% endif %}
+{% assign newArrayItems = newArray | split: ',' %}
+
+{% assign variant_urls = '' %}
+{% for variant in card_product.variants %}
+  {% if newArrayItems contains variant.option1 %}
+    {% assign newArrayItems = newArrayItems | remove: variant.option1 %}
+    {% assign variant_urls = variant_urls | append: variant.url | append: ',' %}
+  {% endif %}
+{% endfor %}
+
+{% assign variant_url_array = variant_urls | split: ',' %}
+{% assign colorCodes = card_product.metafields.custom.color_codes.value.color_codes %}
+
+{% if hasColors %}
+  <div class="c-colorSwatches">
+    {% for option in card_product.options_with_values %}
+      {% if option.name contains 'color' or option.name contains 'Color' %}
+        <ul class="c-colorSwatches__colorList u-list">
+          {% for value in option.values %}
+            {% if forloop.index <= 4 %}
+              <li class="c-colorSwatches__colorItem">
+                {% liquid
+                  assign currentIndex = forloop.index | minus: 1
+                %}
+
+                {% assign colorHexCode = '' %}
+                {% for color in colorCodes %}
+                  {% if color.color_name == value %}
+                    {% assign colorHexCode = color.color_hex_code %}
+                  {% endif %}
+                {% endfor %}
+
+                <a
+                  title="Color: {{ value }}"
+                  href="{{ variant_url_array[currentIndex] }}"
+                  data-value="{{ value }}"
+                  class="c-colorSwatches__itemLink"
+                  style="background:{{ colorHexCode }};"
+                >
+                  <span class="u-hide">{{ value }}</span>
+                </a>
+              </li>
+            {% else %}
+              <li class="c-colorSwatches__colorItem c-colorSwatches__colorItem--last">
+                <a
+                  title="See All Colors"
+                  href="{{ card_product.url }}"
+                  data-value="{{ value }}"
+                  class="c-colorSwatches__itemLink c-colorSwatches__itemLink--last"
+                >
+                  {% render 'icon-variant-plus', classes: 'o-icon__variantIcon' %}
+                </a>
+                {% break %}
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}

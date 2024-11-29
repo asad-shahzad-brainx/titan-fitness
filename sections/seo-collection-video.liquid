@@ -1,0 +1,73 @@
+{% assign collectionVideo = collection.metafields.seo.video.value %}
+
+{% if collectionVideo != blank %}
+    {% for data in collectionVideo %}
+        {% for vidItem in data.seo_video %}
+            <div class="obx-bottom-template">
+                <section class="cat-video">
+                    <div class="o-pageWidth">
+                        <div class="flex-row">
+                            <div class="col video-col">
+                                <div class="video-container">
+                                    {% if vidItem.section_video_id %}
+                                        <div class="youtube" data-embed="{{ vidItem.section_video_id }}"></div>
+                                    {% else if vidItem.section_video_url %}
+                                        <div class="youtube">
+                                            <iframe width="600" height="337" src="{{ vidItem.section_video_url }}" frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen="allowfullscreen"></iframe>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col content-col">
+                                {% if vidItem.section_h2 %} <h2>{{ vidItem.section_h2 }}</h2>{% endif %}
+                                {% if vidItem.section_text != blank %}
+                                    {{ vidItem.section_text }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div> 
+                </section>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+        var ytVid = document.querySelectorAll('.youtube');
+        for (var i = 0; i < ytVid.length; i++) {
+            var thumbnail = "https://img.youtube.com/vi/"+ ytVid[i].dataset.embed +"/maxresdefault.jpg";
+            ytVid[i].style.cssText = "max-width: 680px;";
+            ytVid[i].innerHTML = '<div class="play"></div>' +
+                '<meta itemprop="embedURL" content="https://www.youtube.com/embed/' +  ytVid[i].dataset.embed +'" />' +
+                '<img style="cursor: pointer;" width="600" height="337" src="' + thumbnail + '" />';
+            ytVid[i].addEventListener( "click", function() {
+                this.innerHTML = '<iframe width="600" height="337" frameBorder="0" ' +
+                    'allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"' +
+                    'src="https://www.youtube.com/embed/' + this.dataset.embed + '?enablejsapi=1&rel=0&showinfo=0&autoplay=1"' +
+                    ' allowFullScreen="allowfullscreen"></iframe>';
+            } );
+        }
+    })
+    </script>
+
+{% endif %}
+
+
+
+{% schema %}
+{
+  "name": "SEO: Video",
+  "class": "seo-video-content",
+  "settings": [
+    {
+        "type": "paragraph",
+        "content": "Outputs Collection Metafield: 'SEO: Video'"
+    }
+  ],
+  "presets": [
+    {
+      "name": "SEO: Video"
+    }
+  ]
+}
+{% endschema %}

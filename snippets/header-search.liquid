@@ -1,0 +1,213 @@
+{% comment %}
+  Renders a header search modal. Should be used with 'header.liquid'
+
+  Accepts:
+  - input_id: {String} Id for the search input element (required)
+
+  Usage:
+  {% render 'header-search', input_id: 'My-Id'%}
+{% endcomment %}
+<toggle-search>
+  <details-modal class="header__search">
+    <div id="c-details" class="header__searchBtn c-details" data-search-btn>
+      <div
+        id="c-summary"
+        class="header__icon header__icon--search header__icon--summary focus-inset modal__toggle c-summary"
+        aria-label="{{ 'general.search.search' | t }}"
+        data-search-summary-ele
+      >
+        <button class="modal__toggle-open icon icon-search" aria-hidden="true" focusable="false">
+          <span class="header__searchText c-n2">Search</span>
+          {% render 'icon-search' %}
+        </button>
+      </div>
+      <div
+        class="c-searchBar search-modal modal__content gradient"
+        role="dialog"
+        aria-modal="true"
+        aria-label="{{ 'general.search.search' | t }}"
+      >
+        <div class="modal-overlay"></div>
+        <div
+          class="search-modal__content{% if settings.inputs_shadow_vertical_offset != 0 and settings.inputs_shadow_vertical_offset < 0 %} search-modal__content-top{% else %} search-modal__content-bottom{% endif %}"
+          tabindex="-1"
+        >
+          {% if settings.search_logo != blank %}
+            {% capture logoAltText %}{{ shop.name }} search bar logo{% endcapture %}
+            <div class="search__logo">
+              {{
+                settings.search_logo
+                | image_url: width: 100
+                | image_tag:
+                  class: 'search__icon motion-reduce',
+                  width: settings.search_logo_width,
+                  alt: logoAltText,
+                  preload: true
+              }}
+            </div>
+          {% endif %}
+          {%- if settings.predictive_search_enabled and settings.ss_enable == false -%}
+            <predictive-search
+              class="search-modal__form"
+              data-loading-text="{{ 'accessibility.loading' | t }}"
+              data-search-form
+            >
+          {%- else -%}
+            <search-form class="search-modal__form" data-search-form>
+          {%- endif -%}
+
+          {%- if settings.ss_enable -%}
+            <form
+              action="{{ routes.collections_url }}/{{ settings.ss_collection_handle }}"
+              method="get"
+              role="search"
+              class="search search-modal__form"
+            >
+              <div class="field">
+                <input
+                  class="search__input field__input ss__autocomplete__input"
+                  id="{{ input_id }}"
+                  type="search"
+                  name="q"
+                  placeholder="What are you looking for?"
+                  data-search-input
+                  data-search-modal-input
+                  data-header-search-modal-input
+                >
+                <button
+                  type="reset"
+                  class="reset__button field__button hidden"
+                  aria-label="{{ 'general.search.reset' | t }}"
+                >
+                  <svg class="icon icon-close" aria-hidden="true" focusable="false">
+                    <use xlink:href="#icon-reset">
+                  </svg>
+                </button>
+                <button class="search__button field__button" aria-label="{{ 'general.search.search' | t }}">
+                  {% render 'icon-search' %}
+                </button>
+              </div>
+            </form>
+          {%- else -%}
+            <form action="{{ routes.search_url }}" method="get" role="search" class="search search-modal__form">
+              <div class="sr-only">
+                The following text field filters the results that follow as you type. Use Tab to access the results.
+              </div>
+              <div class="field">
+                <input
+                  class="search__input field__input"
+                  id="{{ input_id }}"
+                  type="search"
+                  name="q"
+                  {% if search.results_count > 0 %}
+                    value="{{ search.terms | escape }}"
+                  {% endif %}
+                  placeholder="What are you looking for?"
+                  data-search-input
+                  data-search-modal-input
+                  {% if settings.predictive_search_enabled %}
+                    role="combobox"
+                    aria-expanded="false"
+                    aria-owns="predictive-search-results"
+                    aria-controls="predictive-search-results"
+                    aria-haspopup="listbox"
+                    aria-autocomplete="list"
+                    autocorrect="off"
+                    autocomplete="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                  {% endif %}
+                  data-header-search-modal-input
+                >
+                <input type="hidden" name="options[prefix]" value="last">
+                <button
+                  type="reset"
+                  class="reset__button field__button hidden"
+                  aria-label="{{ 'general.search.reset' | t }}"
+                >
+                  <svg class="icon icon-close" aria-hidden="true" focusable="false">
+                    <use xlink:href="#icon-reset">
+                  </svg>
+                </button>
+                <button class="search__button field__button" aria-label="{{ 'general.search.search' | t }}">
+                  {% render 'icon-search' %}
+                </button>
+              </div>
+              {%- if settings.predictive_search_enabled -%}
+                <div class="predictive-search predictive-search--header" tabindex="-1" data-predictive-search>
+                  <div class="predictive-search__loading-state">
+                    <svg
+                      aria-hidden="true"
+                      focusable="false"
+                      class="spinner"
+                      viewBox="0 0 66 66"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                    </svg>
+                  </div>
+                </div>
+
+                <span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
+              {%- endif -%}
+            </form>
+          {%- endif -%}
+
+          {%- if settings.predictive_search_enabled and settings.ss_enable == false -%}
+            </predictive-search>
+          {%- else -%}
+            </search-form>
+          {%- endif -%}
+
+          {%- if settings.ss_enable == false -%}
+            <div class="c-searchSuggestions">
+              <div class="c-searchSuggestions__wrapper">
+                <div class="results-count sr-only" aria-live="assertive">{{ search.results_count }}</div>
+                {% assign searchSuggestions = shop.metaobjects.search_suggestions.values %}
+                {% for data in searchSuggestions %}
+                  {% if data.popular_searches != blank %}
+                    <div class="c-searchSuggestions__col c-searchSuggestions__col--searches">
+                      <h2 class="c-searchSuggestions__heading c-n2">Search Suggestions</h2>
+                      <ul class="c-searchSuggestions__popularSearches u-list">
+                        {% for searchTerm in data.popular_searches.value %}
+                          <li class="c-searchSuggestions__item">
+                            <a
+                              href="{{ routes.search_url }}?q={{ searchTerm }}"
+                              class="c-searchSuggestions__link c-b1 c-b1--strong"
+                            >
+                              {{- searchTerm -}}
+                            </a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+                  {% if data.popular_products != blank %}
+                    <div class="c-searchSuggestions__col c-searchSuggestions__col--products">
+                      <h2 class="c-searchSuggestions__heading c-n2">Popular Products</h2>
+                      <ul class="c-searchSuggestions__popularProducts u-list">
+                        {% for searchProduct in data.popular_products.value %}
+                          <li class="c-searchSuggestions__item">
+                            {% render 'card-search', _product: searchProduct %}
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          {%- endif -%}
+
+          <button
+            type="button"
+            class="search-modal__close-button modal__close-button link link--text focus-inset"
+            aria-label="{{ 'accessibility.close' | t }}"
+          >
+            {% render 'icon-close-search', title: 'Close Search' %}
+          </button>
+        </div>
+      </div>
+    </div>
+  </details-modal>
+</toggle-search>

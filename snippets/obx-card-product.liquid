@@ -1,0 +1,59 @@
+{% assign this_product = all_products[product_handle] %}
+
+
+{%- if this_product != empty -%}
+{%- liquid  
+    if productSet
+    assign min_price = 0.0
+    assign max_price = 0.0
+
+    for child_product in card_product.metafields.product_sets.child_products.value
+        if child_product.available
+        if min_price == 0.0
+            assign min_price = child_product.price
+        elsif child_product.price < min_price
+            assign min_price = child_product.price
+        endif
+        if max_price == 0.0
+            assign max_price = child_product.price
+        elsif child_product.price > max_price
+            assign max_price = child_product.price
+        endif
+        endif
+    endfor
+    endif
+-%}
+{% endif %}
+
+<a href="{{ this_product.url }}">
+    {% unless custom_img %}
+        <span class="img-container">
+            <img src="{{ this_product.featured_media | img_url: 'master' }}" alt="{% unless custom_title %}{{ product_title }}{% else %}{{ custom_title }}{% endunless %}">
+        </span>
+        {% else %}
+        <span class="img-container">
+            <img src="{{ custom_img }}" alt="{% unless custom_title %}{{ product_title }}{% else %}{{ custom_title }}{% endunless %}">
+        </span>
+    {% endunless %}
+    <span class="inner">
+        <span class="title">{% unless custom_title %}{{ this_product.title }}{% else %}{{ custom_title }}{% endunless %}</span>
+        <span class="price" style="display: none;">{% render 'price', product: this_product %}</span>
+        {% render 'simple-price',
+            product: this_product,
+            showDiscount: true,
+            is_product_set: productSet,
+            min_price: min_price,
+            max_price: max_price
+        %}
+        <span class="prod-footer">
+            <span class="foot-item">
+                <svg class="o-icon o-icon__shipping" width="23" height="13" viewBox="0 0 23 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 2.5V1H15V10H10" stroke="black"></path><path d="M8 12C9.10457 12 10 11.1046 10 10C10 8.89543 9.10457 8 8 8C6.89543 8 6 8.89543 6 10C6 11.1046 6.89543 12 8 12Z" stroke="black"></path><path d="M18 12C19.1046 12 20 11.1046 20 10C20 8.89543 19.1046 8 18 8C16.8954 8 16 8.89543 16 10C16 11.1046 16.8954 12 18 12Z" stroke="black"></path><path d="M6 10H4" stroke="black"></path><path d="M16 10H15" stroke="black"></path><path d="M5 8H0" stroke="black"></path><path d="M6 6H1" stroke="black"></path><path d="M15 3H20L22 6V10H20" stroke="black"></path><path d="M7 4H2" stroke="black"></path></svg>
+                Fast Shipping
+            </span>
+            <span class="foot-item">
+                <svg class="o-icon o-icon__buyNow" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.5189 6.77377L9.9751 4.6249C9.53206 4.5274 9.06859 4.6057 8.68209 4.84317C8.29558 5.08064 8.01624 5.45868 7.90301 5.89797L7.68625 6.7558H6.71566C6.26174 6.75459 5.8261 6.93371 5.50441 7.25371C5.18259 7.57371 5.0012 8.00845 5 8.4622V16.8822C5.00121 17.336 5.1826 17.7707 5.50441 18.0907C5.82608 18.4107 6.26171 18.5898 6.71566 18.5886H19.2843C19.7383 18.5898 20.1739 18.4107 20.4956 18.0907C20.8174 17.7707 20.9988 17.336 21 16.8822V8.4622C20.9973 8.04985 20.8461 7.65213 20.5742 7.34197C20.3022 7.03195 19.9277 6.83013 19.5191 6.77375L19.5189 6.77377ZM8.83278 6.13272C8.88205 5.94075 9.00328 5.77507 9.17137 5.67002C9.33946 5.56497 9.54156 5.52854 9.73565 5.56844L15.0088 6.75581H8.68851L8.83278 6.13272ZM6.67938 7.7716H19.4017C19.5659 7.80576 19.7132 7.89525 19.8192 8.02509C19.9253 8.15494 19.9835 8.31728 19.9841 8.48493V9.78959H5.9256V8.50292C5.92802 8.30581 6.00888 8.11762 6.15037 7.98036C6.29201 7.84311 6.48232 7.76798 6.67959 7.77161L6.67938 7.7716ZM19.2434 17.6632H6.67938C6.48303 17.6632 6.29468 17.5851 6.15578 17.4463C6.01701 17.3074 5.93901 17.1191 5.93901 16.9227V10.7285H19.9793V16.9227C19.9805 17.1188 19.9035 17.3071 19.7654 17.446C19.6273 17.5851 19.4394 17.6632 19.2435 17.6632L19.2434 17.6632Z" fill="black"></path><path d="M17.9653 16.4624H14.8051C14.6621 16.4758 14.5201 16.4285 14.4138 16.3318C14.3075 16.235 14.2471 16.0981 14.2471 15.9545C14.2471 15.8109 14.3075 15.6739 14.4138 15.5772C14.5201 15.4804 14.6622 15.4331 14.8051 15.4466H17.9654H17.9653C18.2274 15.4714 18.4275 15.6913 18.4275 15.9545C18.4275 16.2176 18.2274 16.4376 17.9653 16.4624H17.9653Z" fill="black"></path></svg>
+                Buy Now, Pay Later
+            </span>
+        </span>
+    </span>
+</a>

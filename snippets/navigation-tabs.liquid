@@ -1,0 +1,22 @@
+{% assign blog = _blog %}
+
+<nav class="c-navList">
+  <div class="c-navList__linksWrapper">
+    <a
+      href="{{ blog.url }}"
+      class="c-navList__link {% unless request.path contains 'tagged' %} c-navList__link--active{% endunless %} c-b2"
+      >All Articles</a
+    >
+    {% for tag in blog.tags %}
+      {% unless tag contains 'featured' %}
+        {% assign opendTag = tag | handleize %}
+        <a
+          href="{{ blog.url }}/tagged/{{ tag | handleize }}"
+          class="c-navList__link{% if request.path contains opendTag %} c-navList__link--active{% endif %} c-b2"
+        >
+          {{ tag -}}
+        </a>
+      {% endunless %}
+    {% endfor %}
+  </div>
+</nav>

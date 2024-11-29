@@ -1,0 +1,324 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="c-testimonials color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding">
+  <div class="o-pageWidth">
+    <testimonials-component aria-label="Testimonials" role="region">
+      <div class="c-testimonials__row">
+        {% if section.settings.heading != blank %}
+          <div class="c-testimonials__col">
+            {% render 'heading',
+              classes: 'c-testimonials__heading c-b1',
+              level: section.settings.heading_tag,
+              text: section.settings.heading
+            %}
+          </div>
+        {% endif %}
+
+        {% if section.blocks.size > 1 %}
+          <div class="c-testimonials__col c-testimonials__col--testimonials">
+            <div class="c-testimonials__items">
+              {%- for block in section.blocks -%}
+                {%- case block.type -%}
+                  {%- when 'testimonial' -%}
+                    <div
+                      class="c-testimonials__item{% if forloop.index != 1 %} c-testimonials__item--hidden{% endif %}"
+                      data-testimonials-item="true"
+                      data-item-index="{{ forloop.index }}"
+                    >
+                      <blockquote class="c-testimonials__content c-h2">
+                        {{ block.settings.testimonial | strip_html }}
+                      </blockquote>
+                      <p class="c-testimonials__author c-h4">
+                        {{ block.settings.author_name }}
+                      </p>
+                    </div>
+                {%- endcase -%}
+              {%- endfor -%}
+            </div>
+          </div>
+          <div class="c-testimonials__col c-testimonials__col--logos">
+            <div class="c-testimonials__logos">
+              <span class="u-srOnly">
+                Selecting a testimonial button will update the featured testimonial in this section.
+              </span>
+              {%- for block in section.blocks -%}
+                {%- case block.type -%}
+                  {%- when 'testimonial' -%}
+                    {%- assign brand_logo = block.settings.brand_logo -%}
+                    <div class="c-testimonials__logo">
+                      <button
+                        class="c-testimonials__logoBtn{% if forloop.index == 1 %} c-testimonials__logoBtn--active{% endif %}"
+                        data-testimonials-btn="true"
+                        data-btn-index="{{ forloop.index }}"
+                        aria-current="{% if forloop.index == 1 %}true{% else %}false{% endif %}"
+                      >
+                        {% if brand_logo != blank %}
+                          {%- capture logo_alt -%}
+                            Show {{ block.settings.brand_name }} testimonial
+                          {%- endcapture -%}
+                          {{
+                            brand_logo
+                            | image_url: width: brand_logo.width
+                            | image_tag: class: 'c-testimonials__brandLogo', loading: 'lazy', alt: logo_alt
+                          }}
+                        {% else %}
+                          <h4 class="c-testimonials__brandName c-h4">
+                            {{ block.settings.brand_name }}
+                          </h4>
+                        {% endif %}
+                      </button>
+                    </div>
+                {%- endcase -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if section.blocks.size == 1 %}
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'single_testimonial' %}
+                <div class="c-testimonials__col c-testimonials__col--testimonials">
+                  <div class="c-testimonials__content c-h2">
+                    {{ block.settings.testimonial | strip_html }}
+                  </div>
+                  <p class="c-testimonials__author c-h4">
+                    {{ block.settings.author_name }}
+                  </p>
+                </div>
+                <div class="c-testimonials__col c-testimonials__col--logos">
+                  <div class="c-testimonials__rating">
+                    <div class="c-testimonials__stars">
+                      {% liquid
+                        for i in (1..5)
+                          render 'icon-star', classes: 'o-icon__star'
+                        endfor
+                      %}
+                    </div>
+                    {% if block.settings.brand_name != blank %}
+                      <div class="c-testimonials__ratingBrand c-h4">
+                        {{ block.settings.brand_name }}
+                      </div>
+                    {% endif %}
+                    {% if block.settings.reviews_count != blank %}
+                      <a href="{{ block.settings.reviews_link }}" class="c-testimonials__ratingText c-b1">
+                        {{ block.settings.reviews_count }}
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+            {% endcase %}
+          {% endfor %}
+        {% endif %}
+
+        {% if section.settings.reviews_count != blank %}
+          <div class="c-testimonials__col">
+            <div class="c-testimonials__rating">
+              <div class="c-testimonials__stars">
+                {% liquid
+                  for i in (1..5)
+                    render 'icon-star', classes: 'o-icon__star'
+                  endfor
+                %}
+              </div>
+              {% if section.settings.reviews_link != '' %}
+                <a href="{{ section.settings.reviews_link }}" class="c-testimonials__ratingText c-h4">
+                  {{ section.settings.reviews_count }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </testimonials-component>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "class": "testimonials-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "label": "Heading Tag",
+      "id": "heading_tag",
+      "default": "h2",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "reviews_count",
+      "label": "Reviews Count"
+    },
+    {
+      "type": "url",
+      "id": "reviews_link",
+      "label": "Reviews Link"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "accent-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top Mobile",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom Mobile",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Testimonial",
+      "type": "testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "brand_logo",
+          "label": "Brand Logo"
+        },
+        {
+          "type": "text",
+          "id": "brand_name",
+          "label": "Brand Name",
+          "default": "Total Fitness USA"
+        },
+        {
+          "type": "richtext",
+          "id": "testimonial",
+          "label": "Testimonial",
+          "default": "<p>We wanted the best-in-class brand that could withstand the impact of intense training and tolerate the extreme environment of our races — the high quality and toughness of Titan is just what we needed.</p>"
+        },
+        {
+          "type": "text",
+          "id": "author_name",
+          "label": "Author Name",
+          "default": "- Joe De Sena, Founder & CEO, Spartan"
+        }
+      ]
+    },
+    {
+      "name": "Single Testimonial",
+      "type": "single_testimonial",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "testimonial",
+          "label": "Testimonial",
+          "default": "<p>We wanted the best-in-class brand that could withstand the impact of intense training and tolerate the extreme environment of our races — the high quality and toughness of Titan is just what we needed.</p>"
+        },
+        {
+          "type": "text",
+          "id": "author_name",
+          "label": "Author Name",
+          "default": "- Joe De Sena, Founder & CEO, Spartan"
+        },
+        {
+          "type": "text",
+          "id": "brand_name",
+          "label": "Brand Name",
+          "default": "Power Racks"
+        },
+        {
+          "type": "text",
+          "id": "reviews_count",
+          "label": "Reviews Count",
+          "default": "686 Reviews"
+        },
+        {
+          "type": "url",
+          "id": "reviews_link",
+          "label": "Reviews Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials"
+    }
+  ]
+}
+{% endschema %}

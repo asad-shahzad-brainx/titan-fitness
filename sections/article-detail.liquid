@@ -1,0 +1,161 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% assign targetAspectRatio = 2 %}
+{% assign currentAspectRatio = article.image.aspect_ratio | round: 1 %}
+{% assign imageHeight = article.image.width %}
+{% assign imageWidth = article.image.height %}
+
+{% if currentAspectRatio > targetAspectRatio %}
+  {% assign imageHeight = article.image.height %}
+  {% assign imageWidth = imageHeight | times: targetAspectRatio %}
+{% elsif currentAspectRatio < targetAspectRatio %}
+  {% assign imageWidth = article.image.width %}
+  {% assign imageHeight = imageWidth | divided_by: targetAspectRatio %}
+{% else %}
+  {% assign imageWidth = article.image.width %}
+  {% assign imageHeight = article.image.height %}
+{% endif %}
+
+<section class="c-articleDetails color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding">
+  <div class="o-pageWidth">
+    {% if section.settings.show_breadcrumbs %}
+      <div class="c-articleDetails__breadcrumbs">
+        {% render 'breadcrumbs', list: section.settings.menu, current: blog.handle %}
+      </div>
+    {% endif %}
+    <div class="c-articleDetails__imgWrapper">
+      {{
+        article.image
+        | image_url: width: imageWidth, height: imageHeight
+        | image_tag: loading: 'lazy', class: 'c-articleDetails__img'
+      }}
+    </div>
+    <div class="c-articleDetails__info">
+      {% for block in section.blocks %}
+        {% if block.type == 'text' %}
+          <div class="c-articleDetails__titleWrapper">
+            <h1 class="c-articleDetails__title c-h2">{{ article.title }}</h1>
+            {% if block.settings.show_date %}
+              <p class="c-articleDetails__publishedDate c-b2">{{ article.published_at | date: '%B %d, %Y' }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if block.type == 'content' %}
+          <div class="c-articleDetails__content">
+            {{ article.content }}
+          </div>
+        {% endif %}
+      {% endfor %}
+      {% if section.settings.back_cta_label != blank %}
+        <div class="c-articleDetails__back">
+          <a href="{{ blog.url }}" class="c-articleDetails__backLink c-btn c-btnPrimary">
+            {{- section.settings.back_cta_label -}}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Blog Detail",
+  "settings": [
+    {
+      "type": "text",
+      "label": "Back CTA label",
+      "id": "back_cta_label",
+      "default": "Back to Titan Fitness Blog"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "default": true,
+      "label": "Show Breadcrumbs"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "background-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top Mobile",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom Mobile",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Title",
+      "type": "text",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "label": "Show Date",
+          "id": "show_date",
+          "default": true
+        }
+      ]
+    },
+    {
+      "name": "Article Content",
+      "type": "content",
+      "limit": 1
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog Detail"
+    }
+  ]
+}
+{% endschema %}

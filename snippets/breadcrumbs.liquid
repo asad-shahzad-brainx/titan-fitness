@@ -1,0 +1,190 @@
+{%- unless template == 'index' or template == 'cart' -%}
+  <nav class="c-breadcrumbs" role="navigation" aria-label="breadcrumbs">
+    {%- if template contains 'product' -%}
+      {%- capture product_url_string -%}{%- for collection in product.collections -%}{{collection.url }}|{%- endfor -%}{%- endcapture -%}
+      {%- assign object_url_string = product_url_string | append: product.url -%}
+    {%- elsif template contains 'collection' and collection.handle -%}
+      {%- capture object_url_string -%}/collections/{{ collection.handle }}{%- endcapture -%}
+    {%- elsif template contains 'page' -%}
+      {%- capture object_url_string -%}/pages/{{ page.url }}{%- endcapture -%}
+    {% endif %}
+    {%- assign object_urls = object_url_string | split: '|' -%}
+    {%- capture linklist_titles_str -%}{%- for linklist in linklists -%}{{ linklist.title | handleize }}|{%- endfor -%}{%- endcapture -%}
+    {%- assign str_size = linklist_titles_str | size | minus: 1 -%}
+    {%- assign linklist_titles_str = linklist_titles_str | slice: 0, str_size -%}
+    {%- assign linklist_titles = linklist_titles_str | split: '|' -%}
+    {%- assign level = 1 -%}
+    {%- for link in linklists['main-menu'].links -%}
+      {%- assign link_handle = link.title | handle -%}
+      {%- assign link_titles = link_titles | append: link.title | append: '|' -%}
+      {%- assign link_urls = link_urls | append: link.url | append: '|' -%}
+      {%- assign link_levels = link_levels | append: level | append: '|' -%}
+      {%- assign link_parents = link_parents | append: 'main-menu' | append: '|' -%}
+      {%- assign link_handles = link_handles | append: link_handle | append: '|' -%}
+      {%- if linklist_titles contains link_handle -%}
+        {%- for clink in linklists[link_handle].links -%}
+          {%- if forloop.first == true -%}
+            {%- assign level = level | plus: 1 -%}
+          {%- endif -%}
+          {% assign clink_handle = clink.title | handle %}
+          {%- assign link_titles = link_titles | append: clink.title | append: '|' -%}
+          {%- assign link_urls = link_urls | append: clink.url | append: '|' -%}
+          {%- assign link_levels = link_levels | append: level | append: '|' -%}
+          {%- assign link_parents = link_parents | append: link_handle | append: '|' -%}
+          {%- assign handle = link.title | handleize -%}
+          {%- assign link_handles = link_handles | append: clink_handle | append: '|' -%}
+          {%- if linklist_titles contains clink_handle -%}
+            {%- for gclink in linklists[clink_handle].links -%}
+              {%- if forloop.first == true -%}
+                {%- assign level = level | plus: 1 -%}
+              {%- endif -%}
+              {% assign gclink_handle = gclink.title | handle %}
+              {%- assign link_titles = link_titles | append: gclink.title | append: '|' -%}
+              {%- assign link_urls = link_urls | append: gclink.url | append: '|' -%}
+              {%- assign link_levels = link_levels | append: level | append: '|' -%}
+              {%- assign link_parents = link_parents | append: clink_handle | append: '|' -%}
+              {%- assign link_handles = link_handles | append: gclink_handle | append: '|' -%}
+              {%- if forloop.last == true -%}
+                {%- assign level = level | minus: 1 -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+          {%- if forloop.last == true -%}
+            {%- assign level = level | minus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- assign str_size = link_levels | size | minus: 1 -%}
+    {%- assign llevels = link_levels | slice: 0, str_size | split: '|' -%}
+    {%- assign str_size = link_titles | size | minus: 1 -%}
+    {%- assign ltitles = link_titles | slice: 0, str_size | split: '|' -%}
+    {%- assign str_size = link_handles | size | minus: 1 -%}
+    {%- assign lhandles = link_handles | slice: 0, str_size | split: '|' -%}
+    {%- assign str_size = link_parents | size | minus: 1 -%}
+    {%- assign lparents = link_parents | slice: 0, str_size | split: '|' -%}
+    {%- assign str_size = link_urls | size | minus: 1 -%}
+    {%- assign lurls = link_urls | slice: 0, str_size | split: '|' -%}
+    {%- assign depth = '3' -%}
+    {%- assign bc3_parent_list_handle = '' %}
+    {%- for url in lurls -%}
+      {%- if object_urls contains url and llevels[forloop.index0] == depth -%}
+        {%- unless url == product.url or url == collection.url -%}
+          {%- capture bc3 -%}
+            <a href="{{ url }}" title="{{ ltitles[forloop.index0] }}" class="c-breadcrumbs__link c-b2">{{ ltitles[forloop.index0] }}</a>
+          {%- endcapture -%}
+        {%- endunless -%}
+        {%- assign bc3_parent_list_handle = lparents[forloop.index0] -%}
+        {%- assign bc3_list_handle = lhandles[forloop.index0] -%}
+        {% break %}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- assign depth = '2' -%}
+    {%- assign bc2_parent_list_handle = '' %}
+    {%- if bc3_parent_list_handle == '' -%}
+      {%- for url in lurls -%}
+        {%- if llevels[forloop.index0] == depth -%}
+          {%- if object_urls contains url -%}
+            {%- unless url == product.url or url == collection.url -%}
+              {%- capture bc2 -%}
+                <a href="{{ url }}" title="{{ ltitles[forloop.index0] }}" class="c-breadcrumbs__link c-b2">{{ ltitles[forloop.index0] }}</a>
+              {%- endcapture -%}
+            {% endunless %}
+            {%- assign bc2_parent_list_handle = lparents[forloop.index0] -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- else -%}
+      {%- for list_handle in lhandles -%}
+        {%- if list_handle == bc3_parent_list_handle -%}
+          {% assign bc2_list_handle = list_handle %}
+          {%- assign bc2_parent_list_handle = lparents[forloop.index0] -%}
+          {%- assign bc2_list_title = ltitles[forloop.index0] -%}
+          {%- for bc2_sibling_link in linklists[bc2_parent_list_handle].links -%}
+            {%- assign bc2_sibling_title_handleized = bc2_sibling_link.title | handle -%}
+            {% if bc2_sibling_title_handleized == bc2_list_handle %}
+              {%- capture bc2 -%}
+                <a href="{{ bc2_sibling_link.url }}" title="{{ bc2_sibling_link.title }}" class="c-breadcrumbs__link c-b2">{{ bc2_sibling_link.title }}</a>
+              {%- endcapture -%}
+              {% break %}
+            {%- endif -%}
+          {%- endfor -%}
+          {% break %}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+    {%- assign depth = depth | minus: 1 | append: '' -%}
+    {%- assign bc1_parent_list_handle = '' %}
+    {%- if bc2_parent_list_handle == '' -%}
+      {% for url in lurls %}
+        {%- if object_urls contains url and llevels[forloop.index0] == depth -%}
+          {%- unless url == product.url or url == collection.url -%}
+            {%- capture bc1 -%}
+              <a href="{{  url }}" title="{{ ltitles[forloop.index0] }}" class="c-breadcrumbs__link c-b2">{{ ltitles[forloop.index0] }}</a>
+            {%- endcapture -%}
+          {% endunless %}
+          {%- assign bc1_parent_list_handle = lparents[forloop.index0] -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- else -%}
+      {%- for list_handle in lhandles -%}
+        {%- if bc2_parent_list_handle == list_handle -%}
+          {% assign bc1_list_handle = list_handle %}
+          {%- assign bc1_parent_list_handle = lparents[forloop.index0] -%}
+          {%- assign bc1_title = ltitles[forloop.index0] -%}
+          {%- for bc1_sibling_link in linklists[bc1_parent_list_handle].links -%}
+            {%- assign bc1_sibling_title_handleized = bc1_sibling_link.title | handle -%}
+            {% if bc1_sibling_title_handleized == bc1_list_handle %}
+              {%- capture bc1 -%}
+                <a href="{{ bc1_sibling_link.url }}" class="c-breadcrumbs__link c-b2" title="{{ bc1_sibling_link.title }}">{{ bc1_sibling_link.title }}</a>
+              {%- endcapture -%}
+              {% break %}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+    {%- if bc1 -%}
+      {{ bc1 }}
+    {%- elsif bc2 -%}
+      {{ bc2 }}
+    {%- elsif bc3 -%}
+      {{ bc3 }}
+    {% else %}
+      {% if template == 'blog' %}
+        <a href="{{ blog.url }}" class="c-breadcrumbs__link c-b2" title="{{ blog.title }}">Blogs</a>
+      {% else %}
+        <a href="{{ shop.url }}" class="c-breadcrumbs__link c-b2" title="Home">Home</a>
+      {% endif %}
+    {%- endif -%}
+    {%- if template contains 'product' -%}
+      <span aria-hidden="true" class="c-breadcrumbs__seprate">/</span>
+      <span class="c-breadcrumbs__currentTitle c-b2">{{ product.title }}</span>
+    {%- elsif template contains 'collection' and collection.handle -%}
+      <span aria-hidden="true" class="c-breadcrumbs__seprate">/</span>
+      <span class="c-breadcrumbs__currentTitle c-b2">{{ collection.title }}</span>
+    {%- elsif template == 'blog' -%}
+      <span aria-hidden="true" class="c-breadcrumbs__seprate">/</span>
+      {%- if current_tags -%}
+        <a href="{{ blog.url }}" class="c-breadcrumbs__link c-b2" title="{{ blog.title }}">{{ blog.title }}</a>
+        <span aria-hidden="true" class="c-breadcrumbs__seprate">/</span>
+        <span class="c-breadcrumbs__currentTitle c-b2">{{ current_tags | join: ' + ' }}</span>
+      {%- else -%}
+        <span class="c-breadcrumbs__currentTitle c-b2">{{ blog.title }}</span>
+      {%- endif -%}
+    {%- elsif template == 'article' -%}
+      <span aria-hidden="true" class="c-breadcrumbs__seprate">/</span>
+      <a href="{{ blog.url }}" class="c-breadcrumbs__link c-b2" title="Home">{{ blog.title }}</a>
+      <span aria-hidden="true" class="c-breadcrumbs__seprate">/</span>
+      <span class="c-breadcrumbs__currentTitle c-b2">{{ article.title | truncatewords: 4 }}</span>
+    {%- elsif template contains 'page' -%}
+      <span aria-hidden="true" class="c-breadcrumbs__seprate">/</span>
+      <span class="c-breadcrumbs__currentTitle c-b2">{{ page.title }}</span>
+    {%- else -%}
+      <span aria-hidden="true" class="c-breadcrumbs__seprate">/</span>
+      <span class="c-breadcrumbs__currentTitle c-b2">{{ page_title }}</span>
+    {% endif %}
+  </nav>
+{%- endunless -%}

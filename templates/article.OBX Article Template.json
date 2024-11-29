@@ -1,0 +1,57 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-obx-article",
+      "blocks": {
+        "51b3095b-75ca-4b1d-b486-d200587ef1c7": {
+          "type": "text",
+          "settings": {
+            "show_date": true,
+            "show_social": true,
+            "show_tags": true
+          }
+        },
+        "079dfcc9-3315-41cd-8d6c-db8b9b4c362e": {
+          "type": "content",
+          "settings": {
+          }
+        },
+        "footer_b3Hnw8": {
+          "type": "footer",
+          "settings": {
+            "show_back": true,
+            "show_social": true
+          }
+        }
+      },
+      "block_order": [
+        "51b3095b-75ca-4b1d-b486-d200587ef1c7",
+        "079dfcc9-3315-41cd-8d6c-db8b9b4c362e",
+        "footer_b3Hnw8"
+      ],
+      "custom_css": [
+        ".c-articleDetails__img {display: none;}"
+      ],
+      "settings": {
+        "show_breadcrumbs": true,
+        "sidebar_cats": "<ul><li><a href=\"https:\/\/titan.fitness\/blogs\/how-to\" title=\"How To's\">How To's<\/a><\/li><li><a href=\"https:\/\/titan.fitness\/blogs\/workouts\" title=\"Workouts\">Workouts<\/a><\/li><li><a href=\"https:\/\/titan.fitness\/blogs\/health-lifestyle\" title=\"Health & Lifestyle\">Health & Lifestyle<\/a><\/li><li><a href=\"https:\/\/titan.fitness\/blogs\/equipment-guides\" title=\"Equipment Guides\">Equipment Guides<\/a><\/li><\/ul>",
+        "padding_top": 50,
+        "padding_bottom": 0,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 0
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

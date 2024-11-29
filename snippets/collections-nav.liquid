@@ -1,0 +1,80 @@
+{% liquid
+  assign lvl1 = false
+  assign lvl2 = false
+  assign lvl3 = false
+  assign GrandChildActive = false
+  assign currentTopMenu = 0
+  for link in linklists['main-menu'].links
+    if link.active or link.child_active
+      assign currentTopMenu = forloop.index
+    endif
+    if link.active and link.child_active != true
+      assign lvl1 = true
+    else
+      if link.links != blank
+        for child_link in link.links
+          if child_link.active
+            assign lvl1 = false
+            assign lvl2 = true
+          else
+            if child_link.links != blank
+              for grandchild_link in child_link.links
+                if grandchild_link.active
+                  assign GrandChildActive = true
+                  assign lvl1 = false
+                  assign lvl2 = false
+                  assign lvl3 = true
+                endif
+              endfor
+            endif
+          endif
+        endfor
+      endif
+    endif
+  endfor
+%}
+
+<nav class="c-collectionNav" data-links-wrapper>
+  <span class="c-collectionNav__overlay"></span>
+  <div class="c-collectionNav__linksWrapper">
+    {% for link in linklists['main-menu'].links %}
+      {% if currentTopMenu == forloop.index %}
+        {% if lvl1 %}
+          <a
+            href="{{ link.url }}"
+            class="c-collectionNav__link{% if link.active %} c-collectionNav__link--active{% endif %} c-b2"
+          >
+            {{ link.title -}}
+          </a>
+          {% for child_link in link.links %}
+            <a
+              href="{{ child_link.url }}"
+              class="c-collectionNav__link{% if child_link.active %} c-collectionNav__link--active{% endif %} c-b2"
+            >
+              {{ child_link.title -}}
+            </a>
+          {% endfor %}
+        {% else %}
+          {% if lvl2 or lvl3 %}
+            {% if lvl3 %}
+              <a
+                href="{{ link.url }}"
+                class="c-collectionNav__link{% if link.active or GrandChildActive %} c-collectionNav__link--active{% endif %} c-b2"
+                >All</a
+              >
+            {% endif %}
+            {% for child_link in link.links %}
+              <a
+                href="{{ child_link.url }}"
+                class="c-collectionNav__link c-collectionNav__link--childLink{% if child_link.active %} c-collectionNav__link--active{% endif %} c-b2"
+              >
+                {{ child_link.title -}}
+              </a>
+            {% endfor %}
+          {% endif %}
+        {% endif %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</nav>

@@ -1,0 +1,279 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign sliderDataValues = product.metafields.custom.product_features.value
+  assign collapsibleClass = ''
+  if section.settings.expand_accordion == 'yes'
+    assign collapsibleClass = 'c-collapsibleSlider__header--active'
+  endif
+
+  assign sliderSectionHeading = product.title | escape | append: ' Features'
+-%}
+
+<section
+  class="c-collapsibleSlider color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding"
+  id="{{ section.settings.heading | replace: ' ', '' }}"
+>
+  
+  <div class="slider-data-wrapper">
+    <script id="slider-elements-data"></script>
+  </div>
+  
+  <div class="o-pageWidth">
+    <collapsible-slider-component>
+      <div class="c-collapsibleSlider__row">
+        <div
+          class="c-collapsibleSlider__header {{ collapsibleClass }}"
+          data-collapsible-slider-section-header="true"
+          aria-expanded="{% if section.settings.expand_accordion == 'yes' %}true{% else %}false{% endif %}"
+          aria-controls="c-collapsibleSlider__body-{{ section.id }}"
+          role="button"
+          tabindex="0"
+        >
+          <div class="c-collapsibleSlider__heading">
+            {% if section.settings.heading != blank %}
+              {% render 'heading',
+                classes: 'c-h3',
+                level: section.settings.heading_tag,
+                text: section.settings.heading
+              %}
+            {% endif %}
+          </div>
+        </div>
+        {% if product.description != blank %}
+          <div class="c-collapsibleSlider__body" id="c-collapsibleSlider__body-{{ section.id }}" data-product-features>
+            <div class="c-collapsibleSlider__content c-b1">
+              <div class="c-collapsibleSlider__contentTextBlock">
+                {{ product.description }}
+              </div>
+              {% if sliderDataValues %}
+                <div class="c-collapsibleSlider__slider">
+                  <div class="c-collapsibleSlider__sliderHeader">
+                    <div class="c-collapsibleSlider__slideHeading" data-slider-heading>
+                      {% if sliderSectionHeading != blank %}
+                        {% render 'heading',
+                          classes: 'c-h4',
+                          level: section.settings.slider_heading_tag,
+                          text: sliderSectionHeading
+                        %}
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="c-collapsibleSlider__wrapper">
+                    <div
+                      class="c-collapsibleSlider__sliderBlock textSec swiper"
+                      role="region"
+                      aria-label="{{ sliderSectionHeading }}"
+                      data-collapsible-slider-text
+                    >
+                      <div class="swiper-wrapper">
+                        {% for sliderText in sliderDataValues %}
+                          <div class="swiper-slide">
+                            <h4 class="c-h4">{{ sliderText.heading }}</h4>
+                            <p class="c-b2 c-b2--regular">{{ sliderText.description }}</p>
+                          </div>
+                        {% endfor %}
+                      </div>
+                      {% render 'swiper-controls', controls: true %}
+                    </div>
+
+                    <div
+                      class="c-collapsibleSlider__sliderBlock imageSec swiper"
+                      role="region"
+                      aria-label="{{ sliderSectionHeading }}"
+                      data-collapsible-slider-image
+                    >
+                      <div class="swiper-wrapper">
+                        {% for sliderImage in sliderDataValues %}
+                          <div class="swiper-slide img">
+                            <img
+                              src="https:{{ sliderImage.image.value | image_url: width: 546 }}"
+                              alt="{{ image.alt | escape }}"
+                              loading="lazy"
+                            >
+                          </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </collapsible-slider-component>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collapsible Slider",
+  "settings": [
+    {
+      "type": "select",
+      "label": "Expand Accordion Section ?",
+      "id": "expand_accordion",
+      "default": "yes",
+      "options": [
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "label": "Heading",
+      "id": "heading",
+      "default": "Product Overview"
+    },
+    {
+      "type": "select",
+      "label": "Heading Tag",
+      "id": "heading_tag",
+      "default": "h3",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Slider Section"
+    },
+    {
+      "type": "select",
+      "label": "Slider Heading Tag",
+      "id": "slider_heading_tag",
+      "default": "h4",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.colors.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "background-2"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top Mobile",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom Mobile",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collapsible Slider"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}

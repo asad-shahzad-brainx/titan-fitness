@@ -1,0 +1,351 @@
+<footer class="c-footer color-{{ section.settings.color_scheme }}">
+  <div class="o-pageWidth">
+    <collapsible-component>
+      <div class="c-footer__brandInfo">
+        <div class="c-footer__newsletter">
+          {% if section.settings.heading != blank %}
+            {% render 'heading',
+              classes: 'c-footer__title c-h4 c-footer__mob',
+              level: section.settings.heading_tag,
+              text: section.settings.heading,
+              attributes: 'data-newsletter'
+            %}
+          {% endif %}
+          {% if section.settings.desc != blank %}
+            <p class="c-footer__desc c-b2">{{ section.settings.desc }}</p>
+          {% endif %}
+          <div class="c-footer__form">
+            <div class="klaviyo-form-WNYnEL"></div>
+          </div>
+          <div class="c-footer__socialIcons">
+            <ul class="c-footer__list u-list">
+              {% if settings.social_instagram_link != blank %}
+                <li class="c-footer__socialItem">
+                  <a
+                    href="{{ settings.social_instagram_link }}"
+                    target="_blank"
+                    aria-label="{{ shop.name }} on Instagram"
+                  >
+                    {% render 'icon-instagram', classes: 'o-icon__social o-icon__social--insta' %}
+                  </a>
+                </li>
+              {% endif %}
+              {% if settings.social_facebook_link != blank %}
+                <li class="c-footer__socialItem">
+                  <a
+                    href="{{ settings.social_facebook_link }}"
+                    target="_blank"
+                    aria-label="{{ shop.name }} on Facebook"
+                  >
+                    {% render 'icon-facebook', classes: 'o-icon__social o-icon__social--fb' %}
+                  </a>
+                </li>
+              {% endif %}
+              {% if settings.social_youtube_link != blank %}
+                <li class="c-footer__socialItem">
+                  <a href="{{ settings.social_youtube_link }}" target="_blank" aria-label="{{ shop.name }} on Youtube">
+                    {% render 'icon-youtube', classes: 'o-icon__social o-icon__social--youTube' %}
+                  </a>
+                </li>
+              {% endif %}
+              {% if settings.social_twitter_link != blank %}
+                <li class="c-footer__socialItem">
+                  <a href="{{ settings.social_twitter_link }}" target="_blank" aria-label="{{ shop.name }} on Twitter">
+                    {% render 'icon-twitter', classes: 'o-icon__social o-icon__social--twitter' %}
+                  </a>
+                </li>
+              {% endif %}
+              {% if settings.social_tiktok_link != blank %}
+                <li class="c-footer__socialItem">
+                  <a href="{{ settings.social_tiktok_link }}" target="_blank" aria-label="{{ shop.name }} on Tiktok">
+                    {% render 'icon-tiktok', classes: 'o-icon__social o-icon__social--tikTok' %}
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+        <div class="c-footer__blocks">
+          {% for block in section.blocks %}
+            {% if block.type == 'links' %}
+              <div class="c-footer__menu c-footer_menu--{{forloop.index}}">
+                {% if block.settings.title != blank %}
+                  {% render 'heading',
+                    classes: 'c-footer__menuTitle c-b1',
+                    level: block.settings.heading_tag,
+                    text: block.settings.title,
+                    attributes: 'data-collapsible-item'
+                  %}
+                {% endif %}
+                {% if block.settings.menu != blank %}
+                  <div class="c-footer__menuHolder">
+                    <ul class="c-footer__menuWraper u-list">
+                      {% for link in block.settings.menu.links %}
+                        {% if block.settings.title == 'Account' %}
+                          {% if customer %}
+                            <li class="c-footer__menuItem c-footer__customerAccount c-footer__customerAccount--{{ forloop.index }}">
+                              <a href="/account" class="c-footer__menuLink c-n2"> View Account </a>
+                            </li>
+                          {% else %}
+                            <li class="c-footer__menuItem">
+                              <a href="{{ link.url }}" class="c-footer__menuLink c-n2">
+                                {{ link.title }}
+                              </a>
+                            </li>
+                          {% endif %}
+                        {% else %}
+                          <li class="c-footer__menuItem">
+                            <a href="{{ link.url }}" class="c-footer__menuLink c-n2"{% unless link.url.first == '/' %}
+                              target="_blank"
+                            {% endunless %} >
+                              {{ link.title }}
+                            </a>
+                          </li>
+                        {% endif %}
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </collapsible-component>
+    <div class="c-footer__socialApproval">
+      <div class="c-footer__approvalWrapper">
+        <div class="c-footer__country">
+          <div class="c-footer__countryFlag">
+            {% if section.settings.country_flag != blank %}
+              {% if section.settings.country_flag_svg == blank %}
+                <img
+                  src="{{ section.settings.country_flag | img_url: 'master' }}"
+                  alt="{{ section.settings.country_flag.alt }}"
+                  width="27"
+                  height="20"
+                  class="c-footer__img c-footer__img--flag"
+                >
+              {% else %}
+                {{ section.settings.country_flag_svg }}
+              {% endif %}
+            {% endif %}
+          </div>
+          <div class="c-footer__countryName">
+            {% if section.settings.country_name != blank %}
+              <p class="c-n2">{{ section.settings.country_name }}</p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="c-footer__blocks c-footer__blocks--socialApproval">
+          {% for block in section.blocks %}
+            {% if block.type == 'proof_img' %}
+              {% if block.settings.proof_img != blank %}
+                <div class="c-footer__sociaBadge">
+                  {%- liquid
+                    assign image_height = block.settings.proof_img.width | divided_by: block.settings.proof_img.aspect_ratio
+                  -%}
+                  {% if block.settings.proof_img_svg == blank %}
+                    <img
+                      src="{{ block.settings.proof_img | img_url: 'master' }}"
+                      alt="{{ block.settings.proof_img.alt }}"
+                      class="c-footer__img c-footer__img--badge"
+                      lodaing="lazy"
+                      height="{{ image_height }}"
+                      width="{{ block.settings.proof_img.width }}"
+                    >
+                  {% else %}
+                    {{ block.settings.proof_img_svg }}
+                  {% endif %}
+                </div>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="c-footer__copyright">
+      <div class="c-footer__copyrightText">
+        {% if section.settings.copy_text != blank %}
+          <p class="c-footer__desc c-b3">
+            &copy; {{ 'now' | date: '%Y' }}
+            {{ section.settings.copy_text }}
+          </p>
+        {% endif %}
+      </div>
+      <div class="c-footer__copyrightMenu">
+        {% for block in section.blocks %}
+          {% if block.type == 'copyright_menu' %}
+            <ul class="c-footer__copyrightMenuWrapper u-list">
+              {% if block.settings.copy_menu != blank %}
+                {% for link in block.settings.copy_menu.links %}
+                  <li class="c-footer__menuItem c-footer__menuItem--copyright">
+                    <a href="{{ link.url }}" class="c-footer__menuLink c-b3">
+                      {{ link.title }}
+                    </a>
+                  </li>
+                {% endfor %}
+              {% endif %}
+            </ul>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</footer>
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "text",
+      "label": "Newsletter heading",
+      "id": "heading"
+    },
+    {
+      "type": "select",
+      "label": "Heading Tag",
+      "id": "heading_tag",
+      "default": "h2",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ]
+    },
+    {
+      "type": "textarea",
+      "label": "Newslettter Description",
+      "id": "desc"
+    },
+    {
+      "type": "image_picker",
+      "label": "Country Flag",
+      "id": "country_flag"
+    },
+    {
+      "type": "html",
+      "label": "Country Flag SVG",
+      "id": "country_flag_svg"
+    },
+    {
+      "type": "text",
+      "label": "Country Name",
+      "id": "country_name"
+    },
+    {
+      "type": "text",
+      "label": "Copyright Text",
+      "id": "copy_text"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "accent-1"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Menu",
+      "type": "links",
+      "settings": [
+        {
+          "type": "text",
+          "label": "Menu Heading",
+          "id": "title"
+        },
+        {
+          "type": "select",
+          "label": "Heading Tag",
+          "id": "heading_tag",
+          "default": "h3",
+          "options": [
+            {
+              "label": "H1",
+              "value": "h1"
+            },
+            {
+              "label": "H2",
+              "value": "h2"
+            },
+            {
+              "label": "H3",
+              "value": "h3"
+            },
+            {
+              "label": "H4",
+              "value": "h4"
+            },
+            {
+              "label": "H5",
+              "value": "h5"
+            },
+            {
+              "label": "H6",
+              "value": "h6"
+            }
+          ]
+        },
+        {
+          "type": "link_list",
+          "label": "Select Menu",
+          "id": "menu"
+        }
+      ]
+    },
+    {
+      "name": "Social Proof Image",
+      "type": "proof_img",
+      "settings": [
+        {
+          "type": "image_picker",
+          "label": "Add Image",
+          "id": "proof_img"
+        },
+        {
+          "type": "html",
+          "label": "Add Image SVG",
+          "id": "proof_img_svg"
+        }
+      ]
+    },
+    {
+      "name": "Copyright Menu",
+      "type": "copyright_menu",
+      "settings": [
+        {
+          "type": "link_list",
+          "label": "Select Menu",
+          "id": "copy_menu"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer"
+    }
+  ]
+}
+{% endschema %}

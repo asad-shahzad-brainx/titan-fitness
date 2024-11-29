@@ -1,0 +1,69 @@
+{% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+{% comment %}
+  Renders a product thumbnail with a modal-opener
+
+  Accepts:
+  - media: {Object} Product Media object
+  - media_count: {Number} Number of media objects
+  - position: {String} Position of the media. Used for accessible label.
+  - desktop_layout: {String} Layout of the media for desktop.
+  - loop: {Boolean} Enable video looping (optional)
+  - modal_id: {String} The product modal that will be shown by clicking the thumbnail
+  - xr_button: {Boolean} Renders the "View in your space" button (shopify-xr-button) if the media is a 3D Model
+  - constrain_to_viewport: {Boolean} Force media height to fit within viewport
+  - media_fit: {String} Method ("contain" or "cover") to fit image into container
+  - media_width: {Float} The width percentage that the media column occupies on desktop.
+  - lazy_load: {Boolean} Image should be lazy loaded. Default: true (optional)
+  - high_priority: {Boolean} Image should have high fetch priority. Default: false (optional)
+
+  Usage:
+  {% render 'product-thumbnail-grid',
+    media: media,
+    position: forloop.index,
+    loop: section.settings.enable_video_looping,
+    modal_id: section.id
+  %}
+{% endcomment %}
+
+
+{%- liquid
+  unless lazy_load == false
+    assign loading = 'lazy'
+  endunless
+
+  if high_priority
+    assign fetch_priority = 'high'
+  endif
+
+  assign desktop_columns = 1
+  if desktop_layout == 'columns' and media_count > 1
+    assign desktop_columns = 2
+  endif
+-%}
+
+{% assign alt_text_parts = media.alt | split: '|' %}
+{% assign alt_text = alt_text_parts[0] | strip | escape %}
+
+{%- capture sizes -%}
+  (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | times: media_width | divided_by: desktop_columns | round }}px, (min-width: 990px) {{ media_width | times: 100 | divided_by: desktop_columns }}vw, (min-width: 768px) calc((100vw - 11.5rem) / 2), 1px
+{%- endcapture -%}
+
+<div class="c-product-media-container">
+  {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+    <div class="c-playIcon">
+      {% render 'icon-play', classes: 'o-icon__videoBtn', title: 'Play Button' %}
+    </div>
+    <div class="c-product__media media video">
+      {{ media.preview_image | image_url: width: 1946 | image_tag: loading: loading, sizes: sizes, fetchpriority: fetch_priority }}
+    </div>
+  {%- else -%}
+    <div class="c-product__media media">
+        {{
+          media.preview_image
+          | image_url: width: 1946
+          | image_tag: loading: loading, sizes: sizes, alt: alt_text, fetchpriority: fetch_priority
+          | replace: 'srcset="', 'srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw== 1w, '
+        }}
+    </div>
+  {%- endif -%}
+</div>

@@ -1,0 +1,26 @@
+<article class="c-articleCard" aria-label="article" role="group">
+  <div class="c-articleCard__img">
+    <div class="c-articleCard__image">
+      {{
+        article.image
+        | image_url: width: article.image.width, height: image_height
+        | image_tag: loading: 'lazy', class: 'c-articleCard__imgTag'
+      }}
+    </div>
+    <div class="c-articleCard__imageLink">
+      <a class="c-articleCard__link" href="{{ article.url }}" tabindex="0"> </a>
+    </div>
+  </div>
+  <div class="c-articleCard__info">
+    <div class="c-articleCard__infoWrapper">
+      <h2 class="c-articleCard__title c-h3">
+        <a href="{{ article.url }}" class="c-articleCard__titleLink">
+          {{ article.title | escape }}
+        </a>
+      </h2>
+      <p class="c-articleCard__publishedDate c-b2">{{ article.published_at | date: '%B %d, %Y' }}</p>
+      <p class="c-articleCard__description c-b1">{{ article.excerpt_or_content | truncatewords: 25 | strip_html }}</p>
+      <a href="{{ article.url }}" class="c-articleCard__btn c-btnQuaternary c-a1">Read More</a>
+    </div>
+  </div>
+</article>

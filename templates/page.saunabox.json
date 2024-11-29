@@ -1,0 +1,116 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "hero_banner_WEN7HN": {
+      "type": "hero-banner",
+      "settings": {
+        "img": "shopify://shop_images/SB-BA-Giveaway-Desktop.webp",
+        "img_mobile": "shopify://shop_images/SB-BA-Giveaway-Desktop-mobile.webp",
+        "image_overlay_opacity": 40,
+        "color_scheme": "",
+        "subheading": "ENTER TO WIN THE",
+        "heading": "ULTIMATE HOME GYM GIVEAWAY",
+        "heading_tag": "2",
+        "use_aria_headings": true,
+        "desc": "",
+        "allignment_desktop": "u-middleCenterDesktop",
+        "allignment_mobile": "u-middleCenter",
+        "text_color": "#ffffff",
+        "btn_label": "",
+        "btn_link": "",
+        "button_color_scheme": "c-btnPrimary"
+      }
+    },
+    "rich_text_cQLEX4": {
+      "type": "rich-text",
+      "blocks": {
+        "text_PkJ38H": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Titan Fitness is excited to partner with Barbell Apparel and Saunabox to help you create the ultimate home gym experience! One lucky winner will receive a gift card valued at $5,000 to purchase any gym equipment they choose from Titan Fitness, a $2,500 gift card to Barbell Apparel for gym clothes and an Ultimate Recovery Bundle Pro from Saunabox valued at $1,900! Sign up now for your chance to win! Hurry! Giveaway ends November 3rd.</p>"
+          }
+        },
+        "heading_hMFmMB": {
+          "type": "heading",
+          "settings": {
+            "heading": "<strong>Win over $9,000 in prizes</strong>",
+            "heading_size": "h0"
+          }
+        }
+      },
+      "block_order": [
+        "text_PkJ38H",
+        "heading_hMFmMB"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "background-2",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 0
+      }
+    },
+    "custom_liquid_N66PEX": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<style>\n.custom-image-grid {\n  display: flex;\n  flex-wrap: wrap;\n  justify-content: space-between;\n  gap: 5px;\n  margin: 50px;\n}\n\n.custom-image-grid__item {\n  flex: 1 1 calc(20% - 10px);\n  text-align: center;\n}\n\n.custom-image-grid__img {\n  max-width: 100%;\n  height: auto;\n  border-radius: 0px;\n}\n\n.custom-image-grid__text {\n  font-weight: 600;\n  font-family: neue-haas-grotesk-display, Helvetica Neue, Helvetica, Arial, sans-serif;\n  font-size: 24px;\n  line-height: 24px;\n  width: 100%; /* Make sure text spans the width of the container */\n  margin-bottom: 10px; /* Add space between text and image */\n  text-align: center; /* Center-align the text */\n}\n\n.custom-image-grid__text_reg {\n  font-weight: 500;\n  font-family: neue-haas-grotesk-display, Helvetica Neue, Helvetica, Arial, sans-serif;\n  font-size: 32px;\n  margin-top: 10px;\n}\n\n@media only screen and (max-width: 767px) {\n  .custom-image-grid {\n    flex-wrap: nowrap;\n    overflow-x: auto;\n    -webkit-overflow-scrolling: touch;\n    gap: 10px;\n  }\n\n  .custom-image-grid__item {\n    flex: 0 0 calc(70% - 10px);\n  }\n}\n\n\n@media only screen and (max-width: 479px) {\n  .custom-image-grid {\n    flex-wrap: nowrap;\n    overflow-x: auto;\n    -webkit-overflow-scrolling: touch;\n    gap: 10px;\n  }\n\n  .custom-image-grid__item {\n    flex: 0 0 calc(80% - 10px);\n  }\n}\n</style>\n<div class=\"custom-image-grid\">\n  <div class=\"custom-image-grid__item\">\n    <p class=\"custom-image-grid__text\">$5,000 Gift Card to Titan Fitness</p>\n    <a href=\"https://www.titan.fitness/\"><img src=\"https://cdn.shopify.com/s/files/1/0802/1508/1237/files/TF-Giveaway.webp?v=1727709302\" alt=\"$5,000 Gift Card to Titan Fitness\" class=\"custom-image-grid__img\"></a>    \n  </div>\n  <div class=\"custom-image-grid__item\">\n    <p class=\"custom-image-grid__text\">$2,500 Gift Card to Barbell Apparel</p>\n    <a href=\"https://barbellapparel.com/\"><img src=\"https://cdn.shopify.com/s/files/1/0802/1508/1237/files/Barbell-Titan-Collab.webp?v=1728318159\" alt=\"$2,500 Gift Card to Barbell Apparel\" class=\"custom-image-grid__img\"></a>    \n  </div>\n  <div class=\"custom-image-grid__item\">\n    <p class=\"custom-image-grid__text\">Ultimate Recovery Bundle Pro ($1,900 value)</p>\n    <a href=\"https://saunabox.com/\"><img src=\"https://cdn.shopify.com/s/files/1/0802/1508/1237/files/sb-desktop.webp?v=1727989044\" alt=\"Ultimate Recovery Bundle Pro ($1,900 value)\" class=\"custom-image-grid__img\"></a>\n  </div>\n</div>",
+        "color_scheme": "background-2",
+        "padding_top": 4,
+        "padding_bottom": 4
+      }
+    },
+    "custom_liquid_mNiqez": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<!-- Klaviyo Signup Form Integration -->\n<form \n  id=\"klaviyo-signup-form\"\n  action=\"https://manage.kmail-lists.com/subscriptions/subscribe?a=YhPRSu&g=TtbfDH\" \n  method=\"POST\" \n  target=\"hidden_iframe\"\n  style=\"text-align: center; max-width: 100%; margin: 0 auto; padding: 20px; display: flex; flex-direction: column; align-items: center;\"\n  onsubmit=\"return showConfirmationAndRedirect();\"\n>\n\n  <!-- Email Input Field -->\n  <input \n    type=\"email\" \n    name=\"email\" \n    placeholder=\"ENTER YOUR EMAIL\" \n    required \n    style=\"padding: 10px; font-weight: 700; font-size: 16px; font-family: neue-haas-grotesk-display, Helvetica Neue, Helvetica, Arial, sans-serif; width: 100%; max-width: 400px; margin-bottom: 10px; box-sizing: border-box;\">\n\n  <!-- Signup Button -->\n  <button \n    type=\"submit\" \n    style=\"background-color: #0A2440; color: white; font-weight: 700; font-size: 30px; neue-haas-grotesk-display, Helvetica Neue, Helvetica, Arial, sans-serif; text-transform: uppercase; padding: 10px; width: 100%; max-width: 400px; margin-bottom: 10px; border: none; cursor: pointer; box-sizing: border-box;\">\n    Sign Up\n  </button>\n\n  <!-- Consent Text -->\n  <p style=\"font-size: 14px; color: #555555; margin-top: 10px; max-width: 400px;\">\n    By submitting this form, you agree to receive recurring automated marketing messages from Titan Fitness. Msg frequency varies. <u><a href=\"https://titan.fitness/pages/prize-supplier-agreement\">Full Prize Supplier Agreement</a></u>.\n  </p>\n</form>\n\n<!-- Hidden iframe to prevent page reload on form submission -->\n<iframe name=\"hidden_iframe\" id=\"hidden_iframe\" style=\"display:none;\"></iframe>\n\n<!-- Confirmation Message -->\n<div id=\"confirmation-message\" style=\"display: none; text-align: center; font-size: 18px; margin-top: 20px; color: #0A2440;\">\n  Thank you for signing up! Redirecting you to our Weekly Deals page...\n</div>\n\n<!-- JavaScript to handle confirmation message and redirect -->\n<script>\n  function showConfirmationAndRedirect() {\n    // Hide the form\n    document.getElementById('klaviyo-signup-form').style.display = 'none';\n\n    // Show the confirmation message\n    document.getElementById('confirmation-message').style.display = 'block';\n\n    // Wait 5 seconds before redirecting to the weekly deals page\n    setTimeout(function() {\n      window.location.href = \"https://titan.fitness/collections/weekly-deals\";\n    }, 5000); // Adjust the timeout as needed (5000ms = 5 seconds)\n\n    // Allow the form submission to proceed to Klaviyo via the hidden iframe\n    return true;\n  }\n</script>",
+        "color_scheme": "background-2",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
+    "custom_liquid_GjRMXG": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<style>\n.countdown-timer {\n  text-align: center;\n  margin: 20px 0;\n}\n\n.countdown-timer__container {\n  display: inline-flex;\n  font-size: 30px;\n  font-weight: 700;\n  font-family: neue-haas-grotesk-display, Helvetica Neue, Helvetica, Arial, sans-serif;\n  background-color: #F2F2F2;\n  padding: 10px 20px;\n  border-radius: 5px;\n  box-shadow: 0 2px 10px rgba(0, 0, 0, 0);\n}\n\n.countdown-timer__unit {\n  margin: 0 10px;\n}\n\n@media only screen and (max-width: 767px) {\n  .countdown-timer__container {\n    font-size: 30px;\n    padding: 5px 10px;\n  }\n}\n</style>\n\n\n<script>\n  document.addEventListener(\"DOMContentLoaded\", function() {\n  // Set the end time for the countdown\n  var endTime = new Date(\"November 3, 2024 23:59:59\").getTime();\n\n  function updateCountdown() {\n    var now = new Date().getTime();\n    var distance = endTime - now;\n\n    // Calculate days, hours, minutes, and seconds\n    var days = Math.floor(distance / (1000 * 60 * 60 * 24));\n    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));\n    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));\n    var seconds = Math.floor((distance % (1000 * 60)) / 1000);\n\n    // Display the results\n    document.getElementById(\"days\").innerText = String(days).padStart(2, '0');\n    document.getElementById(\"hours\").innerText = String(hours).padStart(2, '0');\n    document.getElementById(\"minutes\").innerText = String(minutes).padStart(2, '0');\n    document.getElementById(\"seconds\").innerText = String(seconds).padStart(2, '0');\n\n    // If the countdown is over, stop the timer\n    if (distance < 0) {\n      clearInterval(countdownTimer);\n      document.querySelector(\".countdown-timer__container\").innerText = \"EXPIRED\";\n    }\n  }\n\n  // Update the countdown every second\n  var countdownTimer = setInterval(updateCountdown, 1000);\n\n  // Initialize the countdown display\n  updateCountdown();\n});\n</script>\n\n<div class=\"countdown-timer\">\n<p style=\"text-align: center; color: #0A2440; font-weight: 700; font-size: 30px; font-family: neue-haas-grotesk-display, Helvetica Neue, Helvetica, Arial, sans-serif; text-transform: uppercase;\">Enter now before time runs out!</center></p>\n  <div class=\"countdown-timer__container\">\n    <span class=\"countdown-timer__unit\" id=\"days\">00</span>:\n    <span class=\"countdown-timer__unit\" id=\"hours\">00</span>:\n    <span class=\"countdown-timer__unit\" id=\"minutes\">00</span>:\n    <span class=\"countdown-timer__unit\" id=\"seconds\">00</span>\n  </div>\n</div>",
+        "color_scheme": "background-2",
+        "padding_top": 8,
+        "padding_bottom": 12
+      }
+    },
+    "custom_liquid_Yx687r": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<style>\n  .custom-paragraph {\n    padding: 0 30px;\n    font-size: 16px;\n    line-height: 1.5;\n    text-align: center;\n    margin: 0px 0px 0px 0px;\n  }\n\n  @media only screen and (max-width: 767px) {\n    .custom-paragraph {\n      font-size: 14px; /* Adjust the font size for mobile screens */\n    }\n  }\n</style>\n\n<div class=\"custom-paragraph\">\nNo purchase is necessary to enter or win Titan Fitness Ultimate Home Gym Giveaway. A purchase or payment of any kind will not increase your chances of winning. This giveaway is open to residents of the 48 contiguous United States only (excluding Alaska and Hawaii). This giveaway begins 10-07-24 at 12:00am CST and ends 11-03-24 at 11:59pm CST. Sponsor: Titan Brands, LLC, 3839 Forrest Hill Irene Road, Suite 100, Memphis, TN 38125. \n</div>",
+        "color_scheme": "background-2",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    }
+  },
+  "order": [
+    "main",
+    "hero_banner_WEN7HN",
+    "rich_text_cQLEX4",
+    "custom_liquid_N66PEX",
+    "custom_liquid_mNiqez",
+    "custom_liquid_GjRMXG",
+    "custom_liquid_Yx687r"
+  ]
+}

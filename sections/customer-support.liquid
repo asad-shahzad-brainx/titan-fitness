@@ -1,0 +1,173 @@
+{% assign subHeading_level = section.settings.heading_tag | remove: 'h' %}
+{% assign subHeading_level = subHeading_level | plus: 1 %}
+{% assign subHeading_level = subHeading_level | prepend: 'h' %}
+
+<section class="c-customerSupport{% if template contains 'about' %} color-background-1{% else %} color-{{ section.settings.color_scheme }}{% endif %}">
+  <div class=" o-pageWidth">
+    <div class="c-customerSupport__row">
+      <div class="c-customerSupport__content">
+        {% if section.settings.heading != blank %}
+          {% render 'heading',
+            classes: 'c-customerSupport__title c-h3',
+            level: section.settings.heading_tag,
+            text: section.settings.heading,
+            attributes: 'data-support-heading'
+          %}
+        {% endif %}
+        {% if section.settings.desc != blank %}
+          <p>{{ section.settings.desc }}</p>
+        {% endif %}
+      </div>
+      <div class="c-customerSupport__blocks">
+        {% for block in section.blocks %}
+          <div class="c-iconWithText c-iconWithText--{{ forloop.index }}">
+            <div class="c-iconWithText__icon">
+              {% if block.settings.icon_img != blank %}
+                <img
+                  loading="lazy"
+                  class="c-iconWithText__img"
+                  src="{{ block.settings.icon_img | img_url: 'master' }}"
+                  alt="{{ block.settings.icon_img.alt }}"
+                  width="50"
+                  height="50"
+                >
+              {% else %}
+                {% if block.settings.icon_svg == 'phone' %}
+                  {% render 'icon-phone' %}
+                {% elsif block.settings.icon_svg == 'chat' %}
+                  {% render 'icon-chat' %}
+                {% else %}
+                  {% render 'icon-email' %}
+                {% endif %}
+              {% endif %}
+            </div>
+            <div class="c-iconWithText__text">
+              <div class="c-iconWithText__title">
+                {% if block.settings.title != blank %}
+                  <{{ subHeading_level }}>{{ block.settings.title }}</{{ subHeading_level }}>
+                {% endif %}
+                {% if block.settings.description != blank %}
+                  {{ block.settings.description }}
+                {% endif %}
+              </div>
+              {% if block.settings.title_time != blank %}
+                <div class="c-iconWithText__time">
+                  {{ block.settings.title_time }}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Customer Support",
+  "settings": [
+    {
+      "type": "text",
+      "label": "Main heading",
+      "id": "heading"
+    },
+    {
+      "type": "select",
+      "label": "Heading Tag",
+      "id": "heading_tag",
+      "default": "h2",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "label": "Description",
+      "id": "desc"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "accent-1"
+    }
+  ],
+  "max_blocks": 3,
+  "blocks": [
+    {
+      "name": "Icon",
+      "type": "icon",
+      "settings": [
+        {
+          "type": "image_picker",
+          "label": "Add Icon",
+          "id": "icon_img"
+        },
+        {
+          "type": "select",
+          "id": "icon_svg",
+          "label": "Select Icon",
+          "options": [
+            {
+              "value": "phone",
+              "label": "Phone"
+            },
+            {
+              "value": "chat",
+              "label": "Chat"
+            },
+            {
+              "value": "email",
+              "label": "Email"
+            }
+          ],
+          "default": "phone"
+        },
+        {
+          "type": "inline_richtext",
+          "label": "Title",
+          "id": "title"
+        },
+        {
+          "type": "richtext",
+          "label": "Description",
+          "id": "description"
+        },
+        {
+          "type": "richtext",
+          "label": "Sub Description",
+          "id": "title_time"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customer Support"
+    }
+  ]
+}
+{% endschema %}

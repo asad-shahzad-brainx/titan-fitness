@@ -1,0 +1,26 @@
+{% comment %}
+  Renders Swiper Controls.
+  Usage:
+  {% render 'swiper-controls', controls: true %}
+{% endcomment %}
+
+<!-- scrollbar -->
+
+<div class="c-swiperScrollbar{% if controls %} c-swiperScrollbar--hasControls{% endif %}" data-swiper-scrollbar></div>
+
+<!-- arrows -->
+
+{% if controls %}
+  <div class="c-swiperControls" data-swiper-controls>
+    <button
+      class="c-swiperControls__prev"
+      data-swiper-controls-prev
+      aria-label="previous slide"
+    ></button>
+    <button
+      class="c-swiperControls__next"
+      data-swiper-controls-next
+      aria-label="next slide"
+    ></button>
+  </div>
+{% endif %}

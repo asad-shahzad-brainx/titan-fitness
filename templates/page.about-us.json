@@ -1,0 +1,84 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "a9ac30e8-b09f-4c80-b4fe-bbafaff09afe": {
+      "type": "image-container",
+      "disabled": true,
+      "settings": {
+        "img": "shopify:\/\/shop_images\/about-main-banner.png",
+        "image_overlay_opacity": 10,
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "full_width": true,
+        "color_scheme": ""
+      }
+    },
+    "main": {
+      "type": "about-main",
+      "blocks": {
+        "b3372ad3-3874-4cf6-b850-98797293c0d3": {
+          "type": "info",
+          "settings": {
+            "heading": "Price",
+            "heading_tag": "h3",
+            "description": "<p>We’re here to help you crush your fitness goals without the weighted stress of a price tag. Even if it means our profits are minimal, all of our fitness equipment is carefully priced with the intention of providing you the best value that makes you feel good about your investment.<br\/><\/p>"
+          }
+        },
+        "3ecfb4ea-7254-47d0-bc79-3a2a9ef13cf6": {
+          "type": "info",
+          "settings": {
+            "heading": "Quality",
+            "heading_tag": "h3",
+            "description": "<p>When you pick up a piece of fitness equipment, you want to know it will withstand your most intense workouts. We’re called Titan for a reason. Our fitness equipment is constructed with high-grade materials, making it tough, strong, and reliable. You’ll never have to question if your equipment is built to perform.<br\/><\/p>"
+          }
+        },
+        "cf2f61c3-a337-4413-996c-47599c83ba91": {
+          "type": "info",
+          "settings": {
+            "heading": "Free Shipping",
+            "heading_tag": "h3",
+            "description": "<p>Shipping heavy equipment can be costly, so we eliminate that burden for you. From a 5lb dumbbell to a 500lb weight set, we deliver it all to your doorstep and provide the best possible experience and hold true to our commitment to attainable fitness.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "b3372ad3-3874-4cf6-b850-98797293c0d3",
+        "3ecfb4ea-7254-47d0-bc79-3a2a9ef13cf6",
+        "cf2f61c3-a337-4413-996c-47599c83ba91"
+      ],
+      "settings": {
+        "title": "About Us",
+        "title_tag": "h1",
+        "heading": "Premium fitness equipment without the premium price.",
+        "heading_tag": "h2",
+        "description": "<p>At Titan, we believe everyone deserves access to premium products without the premium price to help achieve your goals. That’s why we’ve aligned our mission to reflect two things. First, to build reliable fitness equipment that withstands intense workouts. Second, to price our equipment realistically so that fitness is attainable for everyone. You shouldn’t have to take out a second mortgage just to live a stronger, healthier life.<br\/><br\/>While some companies compromise on quality to compete on a low-cost business model, other companies price themselves beyond the real world in hopes that customers will pay along and play along. We do neither. We provide premium products without the premium cost. Whether it’s a barbell or a power rack, we eliminate anything that stands in the way of your experience becoming a healthier, fitter you.<\/p>",
+        "image": "shopify:\/\/shop_images\/image_5.png",
+        "padding_top": 32,
+        "padding_bottom": 48,
+        "color_scheme": "background-2"
+      }
+    },
+    "custom_liquid_6Jw6TD": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<script type=\"application\/ld+json\">\n{\n\"@context\": \"http:\/\/schema.org\/\",\n \"@type\": \"AboutPage\",\n \"lastReviewed\": \"4\/15\/2024\",\n \"name\": \"About Us\",\n \"description\": \"At Titan, we believe everyone deserves access to premium products without the premium price to help achieve your goals. That's why we've aligned our mission to reflect two things. First, to build reliable fitness equipment that withstands intense workouts. Second, to price our equipment realistically so that fitness is attainable for everyone. You shouldn't have to take out a second mortgage just to live a stronger, healthier life.\",\n \"url\": \"https:\/\/www.titan.fitness\/s\/TitanFitness\/about-us.html\"\n}\n<\/script>",
+        "color_scheme": "",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "a9ac30e8-b09f-4c80-b4fe-bbafaff09afe",
+    "main",
+    "custom_liquid_6Jw6TD"
+  ]
+}

@@ -1,0 +1,8 @@
+{% comment %}
+  Renders a heading
+
+  Usage:
+  {% render 'heading' classes: 'c-h2 c-header__heading', level: section.settings.heading_tag, text: section.settings.heading, attributes: 'data-heading' %}
+{% endcomment %}
+
+<{{ level }} class="{{ classes }}" {{ attributes }}>{{ text }}</{{ level }}>

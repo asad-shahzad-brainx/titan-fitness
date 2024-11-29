@@ -1,0 +1,331 @@
+{% comment %}
+  Render a Product Card in Cart
+
+  usage:
+  {% render
+    'card-product-cart'
+    item: product
+  %}
+{% endcomment %}
+
+<tr
+  class="c-lineItem cart-item"
+  id="CartItem-{{ item.index | plus: 1 }}"
+  role="group"
+  aria-label="cart product"
+>
+  <td class="cart-item__media">
+    {% if item.image %}
+      <div class="c-lineItem__image">
+        <a href="{{ item.url }}" class="c-lineItem__link" aria-hidden="true" tabindex="-1">
+          <img
+            src="{{ item.image | image_url: width: 300 }}"
+            class="c-lineItem__img"
+            alt="{{ item.image.alt | escape }}"
+            loading="lazy"
+            width="90"
+            height="{{ 90 | divided_by: item.image.aspect_ratio | ceil }}"
+            focusable="false"
+          >
+        </a>
+      </div>
+    {% endif %}
+  </td>
+
+  <td class="cart-item__details">
+    <div class="c-lineItem__details">
+      {% if item.product.compare_at_price > item.product.price %}
+        {% if settings.sale_badge_text != blank %}
+          <div class="c-proCard__badge c-proCard__badge--offer c-b3">
+            {% render 'icon-clock', classes: 'o-icon__clock' %}
+            {{ settings.sale_badge_text }}
+          </div>
+        {% endif %}
+      {% endif %}
+      <a
+        class="fully-unstyled-link c-lineItemLink"
+        href="{{ item.url }}"
+        tabindex="0"
+        id="c-lineItemLink"
+        data-title-ele
+      >
+        <h2 class="c-lineItem__heading c-b1 c-b1--strong">{{ item.product.title | escape }}</h2>
+      </a>
+
+      {% render 'simple-price', product: item.variant, showDiscount: true %}
+
+      {% for option in item.options_with_values %}
+        {% if option.value != 'Default Title' %}
+          <p class="c-variantOption c-b3">{{ option.name }}: {{ option.value }}</p>
+        {% endif %}
+      {% endfor %}
+
+      {% if item.sku != blank %}
+        <p class="c-lineItem__sku c-b3">SKU: {{ item.sku }}</p>
+      {% endif %}
+
+      {% unless item.product.vendor == 'Route' %}
+        {% if item.product.available %}
+          {% assign lowStockFlag = false %}
+          {% if item.product.has_only_default_variant %}
+            {% if item.product.available %}
+              {% if item.product.inventory_quantity < settings.quantity_threshold
+                and item.product.inventory_quantity != 0
+                and lowStockFlag == false
+              %}
+                {% assign lowStockFlag = true %}
+              {% endif %}
+
+              {% assign backOrdered = item.variant.metafields.custom.backorder_status.value %}
+              {% assign backOrderDate = item.variant.metafields.custom.backorder_available_date.value %}
+              {% if lowStockFlag %}
+                {% render 'low-stock', classes: 'c-b2 c-b2--strong ' %}
+              {% elsif backOrdered and backOrderDate %}
+                {% render 'backorder', backOrder: backOrderDate, classes: 'c-b2 c-b2--strong ' %}
+              {% else %}
+                {% render 'in-stock', classes: 'c-b2 c-b2--strong ' %}
+              {% endif %}
+            {% endif %}
+          {% else %}
+            {% if item.product.variants.size > 1 %}
+              {% for variant in item.product.variants %}
+                {% if variant.inventory_quantity < settings.quantity_threshold
+                  and variant.inventory_quantity != 0
+                  and lowStockFlag == false
+                %}
+                  {% assign lowStockFlag = true %}
+                {% endif %}
+              {% endfor %}
+
+              {% assign backOrdered = item.variant.metafields.custom.backorder_status.value %}
+              {% assign backOrderDate = item.variant.metafields.custom.backorder_available_date.value %}
+              {% if lowStockFlag %}
+                {% render 'low-stock', classes: 'c-b2 c-b2--strong ' %}
+              {% elsif backOrdered and backOrderDate %}
+                {% render 'backorder', backOrder: backOrderDate, classes: 'c-b2 c-b2--strong ' %}
+              {% else %}
+                {% render 'in-stock', classes: 'c-b2 c-b2--strong ' %}
+              {% endif %}
+            {% endif %}
+          {% endif %}
+
+        {% else %}
+          {% render 'out-of-stock', classes: 'c-b1 c-b1--strong ' %}
+        {% endif %}
+      {% endunless %}
+    </div>
+  </td>
+
+  {%- liquid
+    assign has_qty_rules = false
+    if item.variant.quantity_rule.increment > 1 or item.variant.quantity_rule.min > 1 or item.variant.quantity_rule.max != null
+      assign has_qty_rules = true
+    endif
+
+    assign has_vol_pricing = false
+    if item.variant.quantity_price_breaks.size > 0
+      assign has_vol_pricing = true
+    endif
+  -%}
+  <td class="c-lineItem__qtyWrapper cart-item__quantity{% if has_qty_rules or has_vol_pricing %} cart-item__quantity--info{% endif %}">
+    <div class="cart-item__totals">
+      <div class="loading-overlay hidden">
+        <div class="loading-overlay__spinner">
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            class="spinner"
+            viewBox="0 0 66 66"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+          </svg>
+        </div>
+      </div>
+
+      <div class="cart-item__price-wrapper">
+        {%- if item.original_line_price != item.final_line_price -%}
+          <dl class="cart-item__discounted-prices">
+            <dt class="visually-hidden">
+              {{ 'products.product.price.regular_price' | t }}
+            </dt>
+            <dd>
+              <s class="c-lineItem__price cart-item__old-price c-b2 c-b2--medium">
+                {{ item.original_line_price | money }}
+              </s>
+            </dd>
+            <dt class="visually-hidden">
+              {{ 'products.product.price.sale_price' | t }}
+            </dt>
+            <dd class="c-lineItem__price c-b2 c-b2--medium">
+              {{ item.final_line_price | money }}
+            </dd>
+          </dl>
+        {%- else -%}
+          <span class="c-lineItem__price c-b2 c-b2--medium">
+            {{ item.original_line_price | money }}
+          </span>
+        {%- endif -%}
+
+        {%- if item.variant.available and item.unit_price_measurement -%}
+          <div class="unit-price caption">
+            <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
+            {{ item.unit_price | money }}
+            <span aria-hidden="true">/</span>
+            <span class="visually-hidden">&nbsp;{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span>
+            {%- if item.unit_price_measurement.reference_value != 1 -%}
+              {{- item.unit_price_measurement.reference_value -}}
+            {%- endif -%}
+            {{ item.unit_price_measurement.reference_unit }}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+    {% if item.vendor != 'Mulberry' %}
+      <quantity-popover>
+        <div class="cart-item__quantity-wrapper quantity-popover-wrapper">
+          <label class="visually-hidden" for="Quantity-{{ item.index | plus: 1 }}">
+            {{ 'products.product.quantity.label' | t }}
+          </label>
+          <div class="quantity-popover-container{% if has_qty_rules or has_vol_pricing %} quantity-popover-container--hover{% endif %}">
+            {%- if has_qty_rules or has_vol_pricing -%}
+              <button
+                type="button"
+                aria-expanded="false"
+                class="quantity-popover__info-button quantity-popover__info-button--icon-only button button--tertiary small-hide no-js-hidden"
+              >
+                {% render 'icon-info' %}
+              </button>
+            {%- endif -%}
+
+            <select
+              class="c-lineItem__quantity quantity cart-quantity c-a1 c-a1--bold"
+              name="updates[]"
+              aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
+              id="Quantity-{{ item.index | plus: 1 }}"
+              data-index="{{ item.index | plus: 1 }}"
+              {% if item.product.vendor == 'Route' %}
+                disabled
+              {% endif %}
+            >
+              {% for i in (1..10) %}
+                <option
+                  value="{{ i }}"
+                  {% if item.quantity == i %}
+                    selected
+                  {% endif %}
+                >
+                  {{ i }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        {%- if has_qty_rules or has_vol_pricing -%}
+          <button
+            type="button"
+            class="quantity-popover__info-button quantity-popover__info-button--icon-with-label button button--tertiary medium-hide large-up-hide"
+            aria-expanded="false"
+          >
+            {% render 'icon-info' %}
+            <span>
+              {%- if has_vol_pricing -%}
+                {{ 'products.product.volume_pricing.note' | t }}
+              {%- elsif has_qty_rules -%}
+                {{ 'products.product.quantity.note' | t }}
+              {%- endif -%}
+            </span>
+          </button>
+        {%- endif -%}
+        {%- if has_vol_pricing or has_qty_rules -%}
+          <div
+            class="cart-items__info global-settings-popup quantity-popover__info"
+            tabindex="-1"
+            hidden
+          >
+            {%- if has_qty_rules == false -%}
+              <span class="volume-pricing-label caption">
+                {{- 'products.product.volume_pricing.title' | t -}}
+              </span>
+            {%- endif -%}
+            <div class="quantity__rules caption no-js-hidden">
+              {%- if item.variant.quantity_rule.increment > 1 -%}
+                <span class="divider">
+                  {{- 'products.product.quantity.multiples_of' | t: quantity: item.variant.quantity_rule.increment -}}
+                </span>
+              {%- endif -%}
+              {%- if item.variant.quantity_rule.min > 1 -%}
+                <span class="divider">
+                  {{- 'products.product.quantity.minimum_of' | t: quantity: item.variant.quantity_rule.min -}}
+                </span>
+              {%- endif -%}
+              {%- if item.variant.quantity_rule.max != null -%}
+                <span class="divider">
+                  {{- 'products.product.quantity.maximum_of' | t: quantity: item.variant.quantity_rule.max -}}
+                </span>
+              {%- endif -%}
+            </div>
+            <button
+              class="button-close button button--tertiary medium-hide large-up-hide"
+              type="button"
+              aria-label="{{ 'accessibility.close' | t }}"
+            >
+              {%- render 'icon-close' -%}
+            </button>
+            {%- if item.variant.quantity_price_breaks.size > 0 -%}
+              <volume-pricing class="parent-display">
+                <ul class="list-unstyled">
+                  <li>
+                    <span>{{ item.variant.quantity_rule.min }}+</span>
+                    {%- assign price = item.variant.price | money_with_currency -%}
+                    <span> {{ 'sections.quick_order_list.each' | t: money: price }}</span>
+                  </li>
+                  {%- for price_break in item.variant.quantity_price_breaks -%}
+                    <li>
+                      <span>
+                        {{- price_break.minimum_quantity -}}
+                        <span aria-hidden="true">+</span></span
+                      >
+                      {%- assign price = price_break.price | money_with_currency -%}
+                      <span> {{ 'sections.quick_order_list.each' | t: money: price }}</span>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </volume-pricing>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+        <div class="cart-item__error" id="Line-item-error-{{ item.index | plus: 1 }}" role="alert">
+          <small class="cart-item__error-text"></small>
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            class="icon icon-error"
+            viewBox="0 0 13 13"
+          >
+            <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+            <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+            <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+            <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+          </svg>
+        </div>
+      </quantity-popover>
+    {% else %}
+      <p class="c-b2 c-b2--regular">Qty: 1</p>
+    {% endif %}
+    <cart-remove-button
+      id="Remove-{{ item.index | plus: 1 }}"
+      data-index="{{ item.index | plus: 1 }}"
+      class="c-lineItem__remove"
+    >
+      <a
+        href="{{ item.url_to_remove }}"
+        class="c-lineItem__removeBtn c-b3"
+        aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
+        tabindex="0"
+      >
+        Remove
+      </a>
+    </cart-remove-button>
+  </td>
+</tr>

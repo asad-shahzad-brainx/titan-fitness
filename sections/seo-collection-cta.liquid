@@ -1,0 +1,47 @@
+{% assign collectionCTA = collection.metafields.seo.cta.value %}
+
+{% if collectionCTA != blank %}
+    {% for data in collectionCTA %}
+        {% for ctaItem in data.seo_cta %}
+            <div class="obx-bottom-template">
+                <div class="o-pageWidth">
+                    <section class="split-cta">
+                        <div class="flex-row dark-bg">
+                            <div class="col col-img">
+                                <img src="{{ ctaItem.section_img }}" alt="{{ ctaItem.section_img_alt }}">
+                            </div>
+                            <div class="col col-content">
+                                {% if ctaItem.section_subtitle %}<div class="subtitle">{{ ctaItem.section_subtitle }}</div>{% endif %}
+                                {% if ctaItem.section_h2 %}<h2 id="ch5">{{ ctaItem.section_h2 }}</h2>{% endif %}
+                                {% if ctaItem.section_text %}<p>{{ ctaItem.section_text }}</p>{% endif %}
+                                {% if ctaItem.section_btn_text %}
+                                    <a href="{{ ctaItem.section_btn_url }}" class="btn btn-white-outline">{{ ctaItem.section_btn_text }}</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+
+
+
+{% schema %}
+{
+  "name": "SEO: CTA",
+  "class": "seo-cta-content",
+  "settings": [
+    {
+        "type": "paragraph",
+        "content": "Outputs Collection Metafield: 'SEO: CTA'"
+    }
+  ],
+  "presets": [
+    {
+      "name": "SEO: CTA"
+    }
+  ]
+}
+{% endschema %}

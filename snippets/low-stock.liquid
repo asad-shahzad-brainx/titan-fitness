@@ -1,0 +1,16 @@
+{% comment %}
+  Render low stock text
+
+  usage:
+  {% render 'low-stock' %}
+{% endcomment %}
+
+<div class="c-lowStock">
+  <p class="{{ classes }} c-lowStock__message">
+    <span class="c-lowStock__icon">
+      {% render 'icon-low-stock', classes: 'o-icon__lowStock' %}
+    </span>
+    Low Inventory
+    <span class="c-b1--regular c-lowStock__orderSoon">Order Soon!</span>
+  </p>
+</div>

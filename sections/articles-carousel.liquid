@@ -1,0 +1,226 @@
+{% assign blog_handle = section.settings.blog %}
+{% assign blog = blogs[blog_handle] %}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+  {% if section.settings.show_separator %}
+    .section-{{ section.id }}-border {
+      border-bottom: 1px solid #EAE9E9;
+    }
+  {% endif %}
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign isTaggedCategory = current_tags | json
+  assign articleCount = 1
+-%}
+
+{% unless isTaggedCategory != 'null' %}
+  <section class="c-articleCarousel color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding{% if section.settings.show_separator %} section-{{ section.id }}-border{% endif %}">
+    <div class="o-pageWidth">
+      <articles-carousel>
+        <div class="c-articleCarousel__content">
+          {% if section.settings.heading != blank %}
+            {% render 'heading',
+              classes: 'c-articleCarousel__heading c-h3',
+              level: section.settings.heading_tag,
+              text: section.settings.heading
+            %}
+          {% endif %}
+          {% if section.settings.blog_tag != blank and section.settings.cta_text != blank %}
+            <div class="c-articleCarousel__cta u-hideMobile">
+              <a href="{{ section.settings.cta_link }}" class="c-articleCarousel__ctaLink c-btn c-btnTertiary c-a2">
+                {{- section.settings.cta_text -}}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+        <section
+          class="c-articleCarousel__sliderContainer swiper-container "
+          role="region"
+          aria-label="{{ section.settings.heading }} Carousel"
+        >
+          <div class="c-articleCarousel__slider swiper" data-articles-slider>
+            <div class="c-articleCarousel__wrapper swiper-wrapper">
+              {%- for article in blog.articles -%}
+                {% if articleCount <= section.settings.limit %}
+                  {% assign has_tag = false %}
+                  {% for tag in article.tags %}
+                    {% if tag contains section.settings.blog_tag and section.settings.blog_tag != blank %}
+                      {% assign has_tag = true %}
+                      {% break %}
+                    {% endif %}
+                  {% endfor %}
+                  {% if has_tag %}
+                    <div class="c-articleCarousel__articles swiper-slide">
+                      {% render 'article-block', article: article %}
+                    </div>
+                    {% assign articleCount = articleCount | plus: 1 %}
+                  {% endif %}
+                {% endif %}
+              {%- endfor -%}
+            </div>
+            {% render 'swiper-controls', controls: true %}
+          </div>
+        </section>
+        <div class="c-articleCarousel__cta u-hideDesktop">
+          {% if section.settings.blog_tag != blank and section.settings.cta_text != blank %}
+            <a
+              href="{{ section.settings.cta_link }}"
+              class="c-articleCarousel__ctaLink c-btn c-btnTertiary c-btn--full c-a2"
+            >
+              {{- section.settings.cta_text -}}
+            </a>
+          {% endif %}
+        </div>
+      </articles-carousel>
+    </div>
+  </section>
+{% endunless %}
+
+{% schema %}
+{
+  "name": "Articles Carousel",
+  "class": "products-carousel-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop Top Categories"
+    },
+    {
+      "type": "select",
+      "label": "Heading Tag",
+      "id": "heading_tag",
+      "default": "h2",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ]
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "text",
+      "id": "blog_tag",
+      "label": "Tag"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA Label"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA Link"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 4,
+      "max": 16,
+      "step": 2,
+      "label": "Number of articles",
+      "default": 8
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separator",
+      "label": "Show Separator",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "accent-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top Mobile",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom Mobile",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Articles Carousel"
+    }
+  ]
+}
+{% endschema %}

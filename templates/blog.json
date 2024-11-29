@@ -1,0 +1,149 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "disabled": true,
+      "settings": {
+        "layout": "collage",
+        "show_image": true,
+        "image_height": "medium",
+        "show_date": true,
+        "show_author": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "184413f7-edf2-4809-83f4-5a27d325720d": {
+      "type": "main-banner",
+      "settings": {
+        "subheading": "How-to’s, workouts, health and lifestyle information, guides and more from the Titan team!",
+        "subheading_tag": "h2",
+        "heading": "Titan Fitness Blog",
+        "heading_tag": "h1",
+        "description": "Whether you need a workout plan, a guide to purchasing new gear, or the latest and greatest news from the pulse of Titan Fitness, get it here!",
+        "blog": "all-articles",
+        "show_breadcrumbs": false,
+        "color_scheme": "background-2",
+        "padding_top": 20,
+        "padding_bottom": 20,
+        "padding_top_mobile": 24,
+        "padding_bottom_mobile": 0
+      }
+    },
+    "a417450d-b51c-4b78-ba73-5550732c0b84": {
+      "type": "articles-grid",
+      "disabled": true,
+      "settings": {
+        "articles_limit": 6,
+        "articles_count": 30,
+        "color_scheme": "background-2",
+        "padding_top": 48,
+        "padding_bottom": 44,
+        "padding_top_mobile": 48,
+        "padding_bottom_mobile": 20
+      }
+    },
+    "e9db1df7-baa5-42a9-8f4f-c65c0f5f7d19": {
+      "type": "articles-carousel",
+      "custom_css": [
+        ".c-articlesBlock__publishedDate {display: none;}"
+      ],
+      "settings": {
+        "heading": "Equipment Guides",
+        "heading_tag": "h2",
+        "blog": "equipment-guides",
+        "blog_tag": "Equipment Guides",
+        "cta_text": "",
+        "cta_link": "\/blogs\/all-articles\/tagged\/equipment-guides",
+        "limit": 8,
+        "show_separator": true,
+        "color_scheme": "background-1",
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40
+      }
+    },
+    "10ad27e2-d8a4-4e5f-8f62-2abe623801d2": {
+      "type": "articles-carousel",
+      "custom_css": [
+        ".c-articlesBlock__publishedDate {display: none;}"
+      ],
+      "settings": {
+        "heading": "Workouts",
+        "heading_tag": "h2",
+        "blog": "workouts",
+        "blog_tag": "Workout",
+        "cta_text": "",
+        "cta_link": "\/blogs\/all-articles\/tagged\/workout",
+        "limit": 8,
+        "show_separator": true,
+        "color_scheme": "background-1",
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40
+      }
+    },
+    "e152d732-9b9b-4189-afa2-cdbc0422aa0c": {
+      "type": "articles-carousel",
+      "custom_css": [
+        ".c-articlesBlock__publishedDate {display: none;}"
+      ],
+      "settings": {
+        "heading": "Health & Lifestyle",
+        "heading_tag": "h2",
+        "blog": "health-lifestyle",
+        "blog_tag": "Health & Lifestyle",
+        "cta_text": "",
+        "cta_link": "\/blogs\/all-articles\/tagged\/health-lifestyle",
+        "limit": 8,
+        "show_separator": true,
+        "color_scheme": "background-1",
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40
+      }
+    },
+    "a7993f35-a205-404a-a63f-e07ea3c3a22c": {
+      "type": "articles-carousel",
+      "custom_css": [
+        ".c-articlesBlock__publishedDate {display: none;}"
+      ],
+      "settings": {
+        "heading": "How-to’s",
+        "heading_tag": "h2",
+        "blog": "how-to",
+        "blog_tag": "How-To’s",
+        "cta_text": "",
+        "cta_link": "\/blogs\/all-articles\/tagged\/how-to-s",
+        "limit": 8,
+        "show_separator": true,
+        "color_scheme": "background-1",
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40
+      }
+    }
+  },
+  "order": [
+    "main",
+    "184413f7-edf2-4809-83f4-5a27d325720d",
+    "a417450d-b51c-4b78-ba73-5550732c0b84",
+    "e9db1df7-baa5-42a9-8f4f-c65c0f5f7d19",
+    "10ad27e2-d8a4-4e5f-8f62-2abe623801d2",
+    "e152d732-9b9b-4189-afa2-cdbc0422aa0c",
+    "a7993f35-a205-404a-a63f-e07ea3c3a22c"
+  ]
+}

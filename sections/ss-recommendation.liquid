@@ -1,0 +1,73 @@
+{% if settings.ss_enable and section.settings.ss_profile_id != blank %}
+  {%- if section.settings.ss_collection_list != blank or section.settings.ss_batched == false -%}
+    {% capture ss_options %}
+			options = {
+				{% if section.settings.ss_collection_list != blank %}categories : [{%- for collection in section.settings.ss_collection_list -%}{{ collection.id }}{%- unless forloop.last -%}, {%- endunless -%}{%- endfor -%}],{% endif %}
+				{% if section.settings.ss_batched == false %}batched : false,{% endif %}
+			};
+		{% endcapture %}
+  {%- endif -%}
+  {% if section.settings.ss_wrapper_class and section.settings.ss_wrapper_class != '' %}
+    <div class="{{ section.settings.ss_wrapper_class }}">
+  {% endif %}
+
+  {% if section.settings.ss_import_card_styles %}
+    {{ 'component-card.css' | asset_url | stylesheet_tag }}
+  {% endif %}
+
+  <script type="searchspring/personalized-recommendations" profile="{{ section.settings.ss_profile_id | escape }}">
+    {%- if template == 'product' -%}
+    	seed = "{{ product.variants[0].sku }}";
+    {%- endif -%}
+    {{ ss_options }}
+  </script>
+  {% if section.settings.ss_wrapper_class and section.settings.ss_wrapper_class != '' %}
+    </div>
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "SS Recommendations",
+  "tag": "div",
+  "class": "section-ss-product-recommendations",
+  "presets": [
+    {
+      "name": "Searchspring Recommendations"
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "ss_profile_id",
+      "label": "Profile ID"
+    },
+    {
+      "type": "text",
+      "id": "ss_wrapper_class",
+      "label": "Specify a class to be added to the recommendations wrapper.",
+      "info": "This can be useful to help control layout and spacing."
+    },
+    {
+      "type": "collection_list",
+      "id": "ss_collection_list",
+      "label": "Collection ID",
+      "info": "Filter recommendations to a list of collection ids. This only works for category trending profiles."
+    },
+    {
+      "type": "checkbox",
+      "id": "ss_import_card_styles",
+      "label": "Import product card styles",
+      "info": "Some pages may not load the necessary styles for results/cards to display correctly(component-card.css). Enabling this may help.",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "ss_batched",
+      "label": "Batched",
+      "info": "Turn off batching on the recommendation. This may show duplicate products across recommendations if you have multiple profiles on the same page.",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

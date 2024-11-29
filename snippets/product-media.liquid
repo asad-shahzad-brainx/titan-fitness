@@ -1,0 +1,106 @@
+{% comment %}
+  Renders product media
+
+  Accepts:
+  - media: {Object} Product Media object
+  - loop: {Boolean} Enable video looping (optional)
+  - variant_image: {Boolean} Whether or not media is associated with a variant
+
+  Usage:
+  {% render 'product-media',
+    media: media,
+    loop: section.settings.enable_video_looping,
+    variant_image: true
+  %}
+{% endcomment %}
+
+{%- if media.media_type == 'image' -%}
+  <img
+    class="global-media-settings global-media-settings--no-shadow{% if variant_image %} product__media-item--variant{% endif %}"
+    srcset="
+      {%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
+      {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
+      {%- if media.preview_image.width >= 1445 -%}{{ media.preview_image | image_url: width: 1445 }} 1445w,{%- endif -%}
+      {%- if media.preview_image.width >= 1680 -%}{{ media.preview_image | image_url: width: 1680 }} 1680w,{%- endif -%}
+      {%- if media.preview_image.width >= 2048 -%}{{ media.preview_image | image_url: width: 2048 }} 2048w,{%- endif -%}
+      {%- if media.preview_image.width >= 2200 -%}{{ media.preview_image | image_url: width: 2200 }} 2200w,{%- endif -%}
+      {%- if media.preview_image.width >= 2890 -%}{{ media.preview_image | image_url: width: 2890 }} 2890w,{%- endif -%}
+      {%- if media.preview_image.width >= 4096 -%}{{ media.preview_image | image_url: width: 4096 }} 4096w,{%- endif -%}
+      {{ media.preview_image | image_url }} {{ media.preview_image.width }}w
+    "
+    sizes="(min-width: 750px) calc(100vw - 22rem), 1100px"
+    src="{{ media.preview_image | image_url: width: 1445 }}"
+    alt="{{ media.alt | escape }}{% if media.position %} - view {{ media.position }}{% endif %}"
+    loading="lazy"
+    width="1100"
+    height="{{ 1100 | divided_by: media.preview_image.aspect_ratio | ceil }}"
+    data-media-id="{{ media.id }}"
+  >
+{%- elsif media.media_type == 'video' or media.media_type == 'external_video' -%}
+  {% assign targetAspectRatio = 1 %}
+  {% assign imageHeight = media.preview_image.height %}
+  {% assign imageWidth = media.preview_image.width %}
+  {% assign imageWidth = imageHeight | times: targetAspectRatio %}
+
+  <div class="c-playIcon__thumbnail">
+    {% render 'icon-play', classes: 'o-icon__videoBtn', title: 'Play Button', hidden: true %}
+  </div>
+  <div class="c-product__media media video{% if thumbs == false %} c-thumbsVideoPreview{% endif %}">
+    {{
+      media.preview_image
+      | image_url: width: imageWidth, height: imageHeight
+      | image_tag: loading: 'lazy', sizes: sizes, alt: media.preview_image.alt
+    }}
+  </div>
+
+  <deferred-media
+    class="deferred-media media global-media-settings global-media-settings--no-shadow c-prodMediaVideo{% if media.media_type == 'external_video' %} c-externalVideo{% endif %}"
+    data-media-id="{{ media.id }}"
+  >
+    <button
+      id="Deferred-Poster-Modal-{{ media.id }}"
+      class="deferred-media__poster {% if thumbs == true %} c-thumbsVideoPreview{% endif %}"
+      type="button"
+    >
+      <div class="c-playIcon">
+        {% render 'icon-play', classes: 'o-icon__videoBtn', title: 'Play Button' %}
+      </div>
+      <img
+        srcset="
+          {% if media.preview_image.width >= 288 %}{{ media.preview_image | image_url: width: 288 }} 288w,{% endif %}
+          {% if media.preview_image.width >= 576 %}{{ media.preview_image | image_url: width: 576 }} 576w,{% endif %}
+          {% if media.preview_image.width >= 550 %}{{ media.preview_image | image_url: width: 550 }} 550w,{% endif %}
+          {% if media.preview_image.width >= 1100 %}{{ media.preview_image | image_url: width: 1100 }} 1100w,{% endif %}
+          {{ media.preview_image | image_url }} {{ media.preview_image.width }}w
+        "
+        src="{{ media | image_url: width: 550, height: 550 }}"
+        sizes="(min-width: 1200px) calc((1200px - 10rem) / 2), (min-width: 750px) calc((100vw - 11.5rem) / 2), calc(100vw - 4rem)"
+        loading="lazy"
+        width="576"
+        height="{{ 576 | divided_by: media.preview_image.aspect_ratio }}"
+        alt="{{ media.preview_image.alt | escape }}"
+      >
+    </button>
+    <template class="{% if thumbs == true %} c-thumbsVideoPreview{% endif %}">
+      {%- case media.media_type -%}
+        {%- when 'external_video' -%}
+          {%- assign video_class = 'js-' | append: media.host -%}
+          {%- if media.host == 'youtube' -%}
+            {{
+              media
+              | external_video_url: autoplay: true, loop: loop, playlist: media.external_id
+              | external_video_tag: class: video_class, loading: 'lazy'
+            }}
+          {%- else -%}
+            {{
+              media
+              | external_video_url: autoplay: true, loop: loop
+              | external_video_tag: class: video_class, loading: 'lazy'
+            }}
+          {%- endif -%}
+        {%- when 'video' -%}
+          {{ media | media_tag: image_size: '2048x', autoplay: true, loop: loop, controls: true, preload: 'none' }}
+      {%- endcase -%}
+    </template>
+  </deferred-media>
+{%- endif -%}

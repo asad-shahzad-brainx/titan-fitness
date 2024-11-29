@@ -1,0 +1,328 @@
+{%- liquid
+  assign textColor = section.settings.text_color | default: 'rgba(var(--color-foreground))'
+  assign multipleImages = false
+  if section.settings.img != blank and section.settings.img_2 != blank
+    assign multipleImages = true
+  endif
+  assign fetchPriority = 'auto'
+  if section.index == 1
+    assign fetchPriority = 'high'
+  endif
+-%}
+
+{%- style -%}
+  #shopify-section-{{ section.id }} .c-heroBanner__subtitle,
+    #shopify-section-{{ section.id }} .c-heroBanner__title,
+    #shopify-section-{{ section.id }} .c-heroBanner__desc {
+      color: {{ textColor }};
+    }
+
+    .c-heroBanner__overlay::after {
+      opacity: {{ section.settings.image_overlay_opacity }}%;
+    }
+{%- endstyle -%}
+
+<section class="c-heroBanner color-{{ section.settings.color_scheme }}{% if multipleImages %} c-heroBanner--multiCol {% endif %}">
+  <div class="c-heroBanner__wrapper">
+    {% if section.settings.button_color_scheme == 'none' %}
+      {% if section.settings.btn_link %}
+        <a href="{{ section.settings.btn_link }}" class="c-heroBanner__big-link">{{ section.settings.btn_label }}</a>
+      {% endif %}      
+    {% endif %}    
+    <div class="c-heroBanner__bannerImg">
+      <div class="c-heroBanner__overlay">
+        {% if section.settings.img != blank %}
+          <picture class="c-heroBanner__img c-heroBanner__img--1">
+            {% if section.settings.img_mobile != blank %}
+              <source media="(max-width: 767px)" srcset="{{ section.settings.img_mobile | image_url }}">
+            {% endif %}
+            {{
+              section.settings.img
+              | image_url: width: section.settings.img.width
+              | image_tag: class: 'c-heroBanner__imgTag', fetchpriority: fetchPriority, alt: section.settings.heading
+            }}
+          </picture>
+        {% endif %}
+        {% if section.settings.img_2 != blank %}
+          <picture class="c-heroBanner__img c-heroBanner__img--2">
+            {{
+              section.settings.img_2
+              | image_url: width: section.settings.img_2.width
+              | image_tag: class: 'c-heroBanner__imgTag', fetchpriority: fetchPriority, alt: section.settings.heading
+            }}
+          </picture>
+        {% endif %}
+      </div>
+      <div class="c-heroBanner__textContent {{ section.settings.allignment_desktop }} {{ section.settings.allignment_mobile }}">
+        <div class="c-heroBanner__textPosition">
+          {% if section.settings.subheading != blank %}
+            <p class="c-heroBanner__subtitle c-h4">{{ section.settings.subheading }}</p>
+          {% endif %}
+          {% if section.settings.heading != blank %}
+            {% if section.settings.use_aria_headings %}
+              <div role="heading" aria-level="{{ section.settings.heading_tag }}" class="c-heroBanner__title c-d1">
+                {{ section.settings.heading }}
+              </div>
+            {% else %}
+              {% capture heading_level %}h{{section.settings.heading_tag}}{% endcapture %}
+              {% render 'heading',
+                classes: 'c-heroBanner__title c-d1',
+                level: heading_level,
+                text: section.settings.heading
+              %}
+            {% endif %}
+          {% endif %}
+          {% if section.settings.desc != blank %}
+            <p class="c-heroBanner__desc c-h4">{{ section.settings.desc }}</p>
+          {% endif %}
+          {% if section.settings.btn_label != blank %}
+            {% unless section.settings.button_color_scheme == 'none' %}
+              <div class="c-heroBanner__btnWrapper">
+                <a
+                  href="{{ section.settings.btn_link }}"
+                  class="c-heroBanner__btn c-a1 c-btn c-btn--medium {{ section.settings.button_color_scheme }}"
+                >
+                  {{- section.settings.btn_label -}}
+                </a>
+              </div>
+            {% endunless %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "label": "Image",
+      "id": "img",
+      "info": "Recommended size 2880 x 1440"
+    },
+    {
+      "type": "image_picker",
+      "label": "Second Image (Optional)",
+      "id": "img_2",
+      "info": "Recommended size 2880 x 1440"
+    },
+    {
+      "type": "image_picker",
+      "label": "Mobile Image (Optional)",
+      "id": "img_mobile",
+      "info": "Recommended size 750 x 1000"
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "label": "Overlay Opacity",
+      "default": 30
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "accent-1"
+    },
+    {
+      "type": "text",
+      "label": "Subheading",
+      "id": "subheading"
+    },
+    {
+      "type": "text",
+      "label": "Heading",
+      "id": "heading"
+    },
+    {
+      "type": "select",
+      "label": "Heading Tag",
+      "id": "heading_tag",
+      "default": "h2",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "label": "Use Aria-Headings",
+      "id": "use_aria_headings",
+      "default": false
+    },    
+    {
+      "type": "textarea",
+      "label": "Description",
+      "id": "desc"
+    },
+    {
+      "type": "select",
+      "id": "allignment_desktop",
+      "label": "Text Alignment Desktop",
+      "default": "u-middleLeftDesktop",
+      "options": [
+        {
+          "label": "Top Left",
+          "value": "u-topLeftDesktop"
+        },
+        {
+          "label": "Top Right",
+          "value": "u-topRightDesktop"
+        },
+        {
+          "label": "Top Center",
+          "value": "u-topCenterDesktop"
+        },
+        {
+          "label": "Middle Left",
+          "value": "u-middleLeftDesktop"
+        },
+        {
+          "label": "Middle Right",
+          "value": "u-middleRightDesktop"
+        },
+        {
+          "label": "Middle Center",
+          "value": "u-middleCenterDesktop"
+        },
+        {
+          "label": "Bottom Left",
+          "value": "u-bottomLeftDesktop"
+        },
+        {
+          "label": "Bottom Right",
+          "value": "u-bottomRightDesktop"
+        },
+        {
+          "label": "Bottom Center",
+          "value": "u-bottomCenterDesktop"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "allignment_mobile",
+      "label": "Text Alignment Mobile",
+      "default": "u-middleCenter",
+      "options": [
+        {
+          "label": "Top Left",
+          "value": "u-topLeft"
+        },
+        {
+          "label": "Top Right",
+          "value": "u-topRight"
+        },
+        {
+          "label": "Top Center",
+          "value": "u-topCenter"
+        },
+        {
+          "label": "Middle Left",
+          "value": "u-middleLeft"
+        },
+        {
+          "label": "Middle Right",
+          "value": "u-middleRight"
+        },
+        {
+          "label": "Middle Center",
+          "value": "u-middleCenter"
+        },
+        {
+          "label": "Bottom Left",
+          "value": "u-bottomLeft"
+        },
+        {
+          "label": "Bottom Right",
+          "value": "u-bottomRight"
+        },
+        {
+          "label": "Bottom Center",
+          "value": "u-bottomCenter"
+        }
+      ]
+    },
+    {
+      "type": "color",
+      "label": "Text Color",
+      "id": "text_color"
+    },
+    {
+      "type": "text",
+      "label": "Button Label",
+      "id": "btn_label"
+    },
+    {
+      "type": "url",
+      "label": "Button Link",
+      "id": "btn_link"
+    },
+    {
+      "type": "select",
+      "id": "button_color_scheme",
+      "label": "Button Type",
+      "default": "c-btnSecondary",
+      "options": [
+        {
+          "label": "Primary",
+          "value": "c-btnPrimary"
+        },
+        {
+          "label": "Secondary",
+          "value": "c-btnSecondary"
+        },
+        {
+          "label": "Tertiary",
+          "value": "c-btnTertiary"
+        },
+        {
+          "label": "Emphasis",
+          "value": "c-btnTertiaryEmphasis"
+        },
+        {
+          "label": "Quaternary",
+          "value": "c-btnQuaternary"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        }        
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner"
+    }
+  ]
+}
+{% endschema %}

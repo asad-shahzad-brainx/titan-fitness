@@ -1,0 +1,155 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+<section
+  aria-label="Instagram Gallery Carousel"
+  class="c-instaCarousel color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding"
+>
+  <div class="o-pageWidth">
+    <instagram-carousel>
+      <div class="c-instaCarousel__textWrapper">
+        {% if section.settings.heading != blank %}
+          {% render 'heading',
+            classes: 'c-instaCarousel__heading c-h3',
+            level: section.settings.heading_tag,
+            text: section.settings.heading
+          %}
+        {% endif %}
+        {% if section.settings.description != blank %}
+          <p class="c-instaCarousel__desc c-b1">{{ section.settings.description | strip_html }}</p>
+        {% endif %}
+      </div>
+      <div class="c-instaCarousel__slider" data-instagram-carousel-slider>
+        <div class="c-instaCarousel__wrapper">
+          {%- for block in section.blocks -%}
+            {% for block in section.blocks %}
+              {% render block %}
+            {% endfor %}
+          {%- endfor -%}
+        </div>
+      </div>
+    </instagram-carousel>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Instagram Carousel",
+  "class": "instagram-carousel-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "#UnleashYourTitan"
+    },
+    {
+      "type": "select",
+      "label": "Heading Tag",
+      "id": "heading_tag",
+      "default": "h2",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Mention us @betitanfit for a chance to be featured</p>"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "accent-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top Mobile",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom Mobile",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram Carousel"
+    }
+  ]
+}
+{% endschema %}

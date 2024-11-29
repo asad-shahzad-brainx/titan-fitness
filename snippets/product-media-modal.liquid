@@ -1,0 +1,113 @@
+{% comment %}
+  Renders a product media modal. Also see 'product-media-gallery'
+
+  Accepts:
+  - product: {Object} Product liquid object
+  - variant_images: {Array} Product images associated with a variant
+
+  Usage:
+  {% render 'product-media-modal' %}
+{% endcomment %}
+
+<product-modal id="ProductModal-{{ section.id }}" class="product-media-modal media-modal">
+  <product-modal-gallery>
+    <div
+      class="product-media-modal__dialog"
+      role="dialog"
+      aria-label="{{ 'products.modal.label' | t }}"
+      aria-modal="true"
+      tabindex="-1"
+    >
+      <button
+        id="ModalClose-{{ section.id }}"
+        type="button"
+        class="product-media-modal__toggle"
+        aria-label="{{ 'accessibility.close' | t }}"
+      >
+        {% render 'icon-close' %}
+      </button>
+
+      <div
+        class="product-media-modal__content color-{{ settings.color_schemes | first }} gradient"
+        tabindex="0"
+      >
+        <div class="c-prodGallery active">
+          <div
+            class="swiper-container c-prodGallery__slider active"
+            role="region"
+            aria-label="{{ 'products.modal.label' | t }}"
+          >
+            <div class="swiper-wrapper active">
+              <p class="sr-only">
+                This is a carousel with product media. Use Next and Previous buttons to navigate, or jump to a slide.
+              </p>
+              {%- for media in product.media -%}
+                {%- liquid
+                  if section.settings.hide_variants and variant_images contains media.src or variant_images contains media.id
+                    assign variant_image = true
+                  else
+                    assign variant_image = false
+                  endif
+
+                  if product.selected_or_first_available_variant.featured_media != null
+                    assign media = product.selected_or_first_available_variant.featured_media
+                  endif
+                -%}
+
+                {% unless media.id == product.selected_or_first_available_variant.featured_media.id %}
+                  <div class="swiper-slide active">
+                    {% render 'product-media',
+                      media: media,
+                      loop: section.settings.enable_video_looping,
+                      variant_image: variant_image,
+                      media_position: forloop.index
+                    %}
+                  </div>
+                {% endunless %}
+              {%- endfor -%}
+            </div>
+            <div class="swiper-button-next" data-swiper-next><span aria-hidden="true">next</span></div>
+            <div class="swiper-button-prev" data-swiper-prev><span aria-hidden="true">prev</span></div>
+            <div class="swiper-pagination" data-swiper-pagination></div>
+          </div>
+
+          <div
+            class="swiper-container c-prodGallery__thumbs active"
+            role="region"
+            aria-label="{{ 'products.modal.label' | t }} Thumbs"
+          >
+            <div class="swiper-wrapper active">
+              <p class="sr-only">
+                This is a carousel with product media thumbs. Use the thumbs to navigate, or jump to a slide.
+              </p>
+              {%- for media in product.media -%}
+                {%- liquid
+                  if section.settings.hide_variants and variant_images contains media.src or variant_images contains media.id
+                    assign variant_image = true
+                  else
+                    assign variant_image = false
+                  endif
+
+                  if product.selected_or_first_available_variant.featured_media != null
+                    assign media = product.selected_or_first_available_variant.featured_media
+                  endif
+                -%}
+
+                {% unless media.id == product.selected_or_first_available_variant.featured_media.id %}
+                  <div class="swiper-slide active">
+                    {% render 'product-media',
+                      media: media,
+                      loop: section.settings.enable_video_looping,
+                      variant_image: variant_image,
+                      media_position: forloop.index
+                    %}
+                  </div>
+                {% endunless %}
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </product-modal-gallery>
+</product-modal>

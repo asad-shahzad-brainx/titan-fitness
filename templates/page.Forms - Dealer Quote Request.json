@@ -1,0 +1,87 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "0aa836ac-416b-4c6c-8047-d0b694876444": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "rich_text_k47nFN": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_qC9qCM": {
+          "type": "heading",
+          "settings": {
+            "heading": "Custom Quote Request",
+            "heading_size": "h1"
+          }
+        },
+        "text_ezhrC3": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Is your vision for your gym as bold as the workouts you offer? Let's turn that dream into a reality. Whether you’re a commercial setup that needs some serious swag, a functional fitness gym waiting to be filled, or a personal trainer who’s not sure where to start. From concept to crunch time, we've got your back. Our team of experts lives to share their expertise when it comes to building out seriously cool gyms customized to each customer’s needs and a quote tailored to every situation. Don’t forget to ask if you qualify for extra savings — large bulk orders get exclusive discounts. <br/><br/>Give us a call or drop your details below to get in touch. </p><p>Call 888-410-1503 x4</p><p>Live near one of our distribution centers? We offer local pickup options in Mechanicsburg, PA, Visalia, CA, Memphis, TN, and Horn Lake, MS. </p>"
+          }
+        }
+      },
+      "block_order": [
+        "heading_qC9qCM",
+        "text_ezhrC3"
+      ],
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "left",
+        "color_scheme": "background-2",
+        "full_width": true,
+        "padding_top": 48,
+        "padding_bottom": 52
+      }
+    },
+    "forms": {
+      "type": "apps",
+      "blocks": {
+        "a7d24c9d-8778-4f00-9b14-eefa3fc3f4ec": {
+          "type": "shopify://apps/forms/blocks/inline/8744a304-fcb1-4347-b211-bb6b4759a76a",
+          "settings": {
+            "form_id": "187806",
+            "text_color": "#202020",
+            "button_background_color": "#0b2440",
+            "button_label_color": "#ffffff",
+            "links_color": "#1878b9",
+            "errors_color": "#e02229",
+            "text_alignment": "left",
+            "form_alignment": "center",
+            "padding_top": 5,
+            "padding_bottom": 64,
+            "padding_right": 0,
+            "padding_left": 0
+          }
+        }
+      },
+      "block_order": [
+        "a7d24c9d-8778-4f00-9b14-eefa3fc3f4ec"
+      ],
+      "custom_css": [
+        "div {background: #f2f2f2;}"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    }
+  },
+  "order": [
+    "0aa836ac-416b-4c6c-8047-d0b694876444",
+    "rich_text_k47nFN",
+    "forms"
+  ]
+}

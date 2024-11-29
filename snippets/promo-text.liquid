@@ -1,0 +1,10 @@
+<div class="c-promoText">
+  <div class="o-pageWidth">
+    <div class="c-promoText__wrapper">
+      <span class="c-promoText__title c-b2"> {{ settings.promo_text }} </span>
+      {% if settings.cta_label != blank %}
+        <a class="c-promoText__link c-b2" href="{{ settings.cta_link }}"> {{ settings.cta_label }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+{%- style -%}
+  .c-promoBar,
+  .c-promoText {
+    background: {{ section.settings.bg_color }};
+  }
+
+  .c-promoText__title ,
+  .c-promoText__link {
+    color: {{ section.settings.text_color }};
+  }
+{%- endstyle -%}
+
+{% assign promoText = settings.promo_text %}
+{% if promoText != blank %}
+  <div class="c-promoBar" role="region" aria-label="Promo Bar">
+    {% render 'promo-text' %}
+  </div>
+{% endif %}
+{% schema %}
+{
+  "name": "Promotion Bar",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color",
+      "label": "BG Color",
+      "id": "bg_color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "label": "Text Color",
+      "id": "text_color",
+      "default": "#000000"
+    }
+  ]
+}
+{% endschema %}

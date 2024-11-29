@@ -1,0 +1,136 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-search",
+      "settings": {
+        "columns_desktop": 4,
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": true,
+        "enable_filtering": true,
+        "filter_type": "drawer",
+        "enable_sorting": true,
+        "article_show_date": false,
+        "article_show_author": false,
+        "columns_mobile": "1",
+        "color_scheme": "background-2",
+        "padding_top": 32,
+        "padding_bottom": 48,
+        "padding_top_mobile": 24,
+        "padding_bottom_mobile": 48
+      }
+    },
+    "38532f92-fa8b-401c-82d2-e0806351bc87": {
+      "type": "products-carousel",
+      "settings": {
+        "heading": "Recently Viewed",
+        "heading_tag": "h2",
+        "collection": "all",
+        "limit": 6,
+        "color_scheme": "background-2",
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 24
+      }
+    },
+    "3b056b90-30cf-42ab-a7b8-4776117b5ccd": {
+      "type": "collections-carousel",
+      "blocks": {
+        "template--21323262066965__3b056b90-30cf-42ab-a7b8-4776117b5ccd-featured_collection-1": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "racks",
+            "collection_img": "shopify:\/\/shop_images\/racks_93adaf38-0d5e-4547-b103-0ff000853141.png",
+            "collection_heading": "",
+            "heading_tag": "h3",
+            "collection_cta": "Shop Now"
+          }
+        },
+        "template--21323262066965__3b056b90-30cf-42ab-a7b8-4776117b5ccd-featured_collection-2": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "adjustable-benches",
+            "collection_img": "shopify:\/\/shop_images\/banches.png",
+            "collection_heading": "Benches",
+            "heading_tag": "h3",
+            "collection_cta": "Shop Now"
+          }
+        },
+        "template--21323262066965__3b056b90-30cf-42ab-a7b8-4776117b5ccd-featured_collection-3": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "functional-weights",
+            "collection_img": "shopify:\/\/shop_images\/weight.png",
+            "collection_heading": "Weights",
+            "heading_tag": "h3",
+            "collection_cta": "Shop Now"
+          }
+        },
+        "template--21323262066965__3b056b90-30cf-42ab-a7b8-4776117b5ccd-featured_collection-4": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "barbell-accessories",
+            "collection_img": "shopify:\/\/shop_images\/barbells_b3c5cb0d-5134-4d39-a60c-1d5386da831b.png",
+            "collection_heading": "Barbells",
+            "heading_tag": "h3",
+            "collection_cta": "Shop Now"
+          }
+        },
+        "template--21323262066965__3b056b90-30cf-42ab-a7b8-4776117b5ccd-featured_collection-5": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "cardio",
+            "collection_img": "shopify:\/\/shop_images\/racks_93adaf38-0d5e-4547-b103-0ff000853141.png",
+            "collection_heading": "",
+            "heading_tag": "h3",
+            "collection_cta": "Shop Now"
+          }
+        },
+        "template--21323262066965__3b056b90-30cf-42ab-a7b8-4776117b5ccd-featured_collection-6": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "boxing-equipment",
+            "collection_img": "shopify:\/\/shop_images\/banches.png",
+            "collection_heading": "",
+            "heading_tag": "h3",
+            "collection_cta": "Shop Now"
+          }
+        }
+      },
+      "block_order": [
+        "template--21323262066965__3b056b90-30cf-42ab-a7b8-4776117b5ccd-featured_collection-1",
+        "template--21323262066965__3b056b90-30cf-42ab-a7b8-4776117b5ccd-featured_collection-2",
+        "template--21323262066965__3b056b90-30cf-42ab-a7b8-4776117b5ccd-featured_collection-3",
+        "template--21323262066965__3b056b90-30cf-42ab-a7b8-4776117b5ccd-featured_collection-4",
+        "template--21323262066965__3b056b90-30cf-42ab-a7b8-4776117b5ccd-featured_collection-5",
+        "template--21323262066965__3b056b90-30cf-42ab-a7b8-4776117b5ccd-featured_collection-6"
+      ],
+      "settings": {
+        "heading": "Browse Categories",
+        "heading_tag": "h2",
+        "color_scheme": "background-1",
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 24
+      }
+    }
+  },
+  "order": [
+    "main",
+    "38532f92-fa8b-401c-82d2-e0806351bc87",
+    "3b056b90-30cf-42ab-a7b8-4776117b5ccd"
+  ]
+}

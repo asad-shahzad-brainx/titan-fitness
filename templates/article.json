@@ -1,0 +1,88 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-article",
+      "blocks": {
+        "featured_image": {
+          "type": "featured_image",
+          "disabled": true,
+          "settings": {
+            "image_height": "adapt"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "blog_show_date": true,
+            "blog_show_author": false
+          }
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        },
+        "content": {
+          "type": "content",
+          "settings": {
+          }
+        }
+      },
+      "block_order": [
+        "featured_image",
+        "title",
+        "share",
+        "content"
+      ],
+      "disabled": true,
+      "settings": {
+      }
+    },
+    "715932c5-22f7-4dc8-8647-efe2a1c0fa29": {
+      "type": "article-detail",
+      "blocks": {
+        "51b3095b-75ca-4b1d-b486-d200587ef1c7": {
+          "type": "text",
+          "settings": {
+            "show_date": false
+          }
+        },
+        "079dfcc9-3315-41cd-8d6c-db8b9b4c362e": {
+          "type": "content",
+          "settings": {
+          }
+        }
+      },
+      "block_order": [
+        "51b3095b-75ca-4b1d-b486-d200587ef1c7",
+        "079dfcc9-3315-41cd-8d6c-db8b9b4c362e"
+      ],
+      "custom_css": [
+        ".c-articleDetails__img {display: none;"
+      ],
+      "settings": {
+        "back_cta_label": "Back to Titan Fitness Blog",
+        "show_breadcrumbs": true,
+        "color_scheme": "",
+        "padding_top": 36,
+        "padding_bottom": 36,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40
+      }
+    }
+  },
+  "order": [
+    "main",
+    "715932c5-22f7-4dc8-8647-efe2a1c0fa29"
+  ]
+}

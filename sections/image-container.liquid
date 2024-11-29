@@ -1,0 +1,114 @@
+{% liquid
+  assign textColor = section.settings.text_color | default: 'rgba(var(--color-foreground))'
+%}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+    }
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+
+  .c-imgContainer__overlay::after {
+    opacity: {{ section.settings.image_overlay_opacity }}%;
+  }
+{%- endstyle -%}
+<section class="c-imgContainer color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding">
+  <div class="c-imgContainer__wrapper{% unless section.settings.full_width%} o-pageWidth{% endunless %}">
+    <div class="c-imgContainer__bannerImg">
+      <div class="c-imgContainer__overlay">
+        {% if section.settings.img != blank %}
+          <picture>
+            {% if section.settings.img_mobile != blank %}
+              <source media="(max-width:767px)" srcset="{{ section.settings.img_mobile | img_url: 'master' }}">
+            {% endif %}
+            {%- liquid
+              assign image_height = section.settings.img.width | divided_by: section.settings.img.aspect_ratio
+            -%}
+            {{
+              section.settings.img
+              | image_url: width: section.settings.img.width
+              | image_tag: loading: 'lazy', height: image_height, class: 'c-imgContainer__img'
+            }}
+          </picture>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Image Container",
+  "settings": [
+    {
+      "type": "image_picker",
+      "label": "Image",
+      "id": "img",
+      "info": "Recommended size 2880 x 1440"
+    },
+    {
+      "type": "image_picker",
+      "label": "Mobile Image (Optional)",
+      "id": "img_mobile",
+      "info": "Recommended size 750 x 1000"
+    },
+    {
+      "type": "range",
+      "id": "image_overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "label": "Overlay Opacity",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    },
+    {
+      "type": "checkbox",
+      "label": "Full Width",
+      "id": "full_width",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "accent-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image Container"
+    }
+  ]
+}
+{% endschema %}

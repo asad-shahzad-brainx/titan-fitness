@@ -1,0 +1,166 @@
+{% assign collectionTestimonials = collection.metafields.custom.collections_testimonials.value %}
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+{% for data in collectionTestimonials %}
+  {% for review in data.reviews %}
+    <section class="c-testimonials color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding">
+      <div class="o-pageWidth">
+        <testimonials-component>
+          <div class="c-testimonials__row">
+            {% if review.section_subheading != blank %}
+              <div class="c-testimonials__col">
+                {% render 'heading',
+                  classes: 'c-testimonials__heading c-b1',
+                  level: section.settings.heading_tag,
+                  text: review.section_subheading
+                %}
+              </div>
+            {% endif %}
+            <div class="c-testimonials__col c-testimonials__col--testimonials">
+              <div class="c-testimonials__content c-h2">
+                {{ review.section_title | strip_html }}
+              </div>
+              <p class="c-testimonials__author c-h4">
+                {{ review.section_author }}
+              </p>
+            </div>
+            <div class="c-testimonials__col c-testimonials__col--logos">
+              <div class="c-testimonials__rating">
+                <div class="c-testimonials__stars">
+                  {% liquid
+                    for i in (1..5)
+                      render 'icon-star'
+                    endfor
+                  %}
+                </div>
+                <div class="c-testimonials__ratingBrand c-h4">
+                  {{ collection.title }}
+                </div>
+                {% if review.section_count != blank and review.section_link != blank %}
+                  <a href="{{ review.section_link }}" class="c-testimonials__ratingText c-b1">
+                    {{ review.section_count }}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </testimonials-component>
+      </div>
+    </section>
+  {% endfor %}
+{% endfor %}
+
+{% schema %}
+{
+  "name": "Collection Testimonials",
+  "class": "testimonials-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "label": "Heading Tag",
+      "id": "heading_tag",
+      "default": "h2",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "accent-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top Mobile",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom Mobile",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Testimonials"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["collection"]
+  }
+}
+{% endschema %}

@@ -1,0 +1,113 @@
+@import url("https://use.typekit.net/tta3wwa.css");
+
+#klaviyo-bis-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+
+  @media only screen and (min-width: 1024px) {
+    position: relative;
+    top: initial;
+    left: initial;
+    transform: none;
+  }
+
+  .btn {
+    text-transform: uppercase;
+    font-size: 14px;
+    border-radius: 2px;
+  }
+  .modal-title {
+    line-height: normal;
+    font-weight: 600;
+    padding-top: 30px;
+  }
+
+  p {
+    font-weight: 500;
+  }
+
+  #container {
+    border-radius: 2px;
+  }
+
+  .form-control.input-lg {
+    border-radius: 2px;
+  }
+
+  .form-control {
+    box-shadow: none;
+    border: 1px solid #cacaca;
+    font-weight: 500;
+  }
+
+  ::-webkit-input-placeholder {
+    color: #000;
+    font-weight: 500;
+  }
+  ::-moz-placeholder {
+    color: #000;
+    font-weight: 500;
+  }
+  :-ms-input-placeholder {
+    color: #000;
+    font-weight: 500;
+  }
+  :-moz-placeholder {
+    color: #000;
+    font-weight: 500;
+  }
+  ::placeholder {
+    color: #000;
+    font-weight: 500;
+  }
+
+  .btn {
+    display: inline-flex;
+    padding: 12px 28px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
+    background-color: #0a2440;
+    font-size: 13px;
+    line-height: 185%;
+    letter-spacing: 0.26px;
+    font-weight: 700;
+    color: #fff;
+    gap: 5px;
+    transition: all 0.3s ease-in-out;
+    min-width: 154px;
+  }
+
+  .btn:hover {
+    background-color: #41658c;
+    border-radius: 2px;
+  }
+  .btn:hover::after,
+  .btn:hover::before {
+    box-shadow: none !important;
+  }
+
+  .btn:active {
+    background-color: #41658c;
+    border: 2px solid #0a2440;
+  }
+  .btn:focus {
+    border: 3px solid #8497b4;
+  }
+
+  .close {
+    color: #000;
+    font-weight: 500;
+    font-size: 35px;
+  }
+
+  .alert-success {
+    color: #000 !important;
+  }
+
+  .alert-success a {
+    color: #000 !important;
+  }
+}

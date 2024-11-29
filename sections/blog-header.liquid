@@ -1,0 +1,192 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<section class="c-blogHeader color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding">
+  <div class="o-pageWidth">
+    <div class="c-blogHeader__wrapper">
+      {% if section.settings.show_breadcrumbs %}
+        {% render 'breadcrumbs', list: section.settings.menu, current: blog.handle %}
+      {% endif %}
+      {% if section.settings.heading != blank %}
+        {% render 'heading',
+          classes: 'c-blogHeader__title c-h2',
+          level: section.settings.heading_tag,
+          text: section.settings.heading
+        %}
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        {% render 'heading',
+          classes: 'c-blogHeader__subtitle c-h4',
+          level: section.settings.subheading_tag,
+          text: section.settings.subheading
+        %}
+      {% endif %}
+      {% if section.settings.description != blank %}
+        <p class="c-blogHeader__description c-b2">{{ section.settings.description }}</p>
+      {% endif %}
+      {% if section.settings.blog != blank %}
+        {% render 'articles-tabs', _blog: section.settings.blog %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Blog Header",
+  "settings": [
+    {
+      "type": "text",
+      "label": "Subheading",
+      "id": "subheading"
+    },
+    {
+      "type": "select",
+      "label": "Subheading Tag",
+      "id": "subheading_tag",
+      "default": "h2",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "label": "Heading",
+      "id": "heading"
+    },
+    {
+      "type": "select",
+      "label": "Heading Tag",
+      "id": "heading_tag",
+      "default": "h1",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ]
+    },
+    {
+      "type": "textarea",
+      "label": "Description",
+      "id": "description"
+    },
+    {
+      "type": "blog",
+      "label": "Tabs Blog",
+      "id": "blog"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "default": true,
+      "label": "Show Breadcrumbs"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "background-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top Mobile",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom Mobile",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog Header"
+    }
+  ]
+}
+{% endschema %}

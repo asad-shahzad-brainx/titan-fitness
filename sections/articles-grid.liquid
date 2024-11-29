@@ -1,0 +1,135 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign isTaggedCategory = current_tags | json
+-%}
+
+{% if isTaggedCategory == 'null' %}
+  <section class="c-articlesGrid color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding">
+    <div class="o-pageWidth">
+      <div class="c-articlesGrid__articlesWrapper">
+        {% for article in blog.articles %}
+          {% if article.tags contains 'featured' %}
+            {% render 'card-article', article: article %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% else %}
+  {% if section.settings.articles_count <= section.settings.articles_limit %}
+    <section class="c-articlesGrid color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding">
+      <div class="o-pageWidth">
+        <div class="c-articlesGrid__articlesWrapper">
+          {% for article in blog.articles limit: section.settings.articles_count %}
+            {% render 'card-article', article: article %}
+          {% endfor %}
+        </div>
+        {%- if paginate.pages > 1 -%}
+          {%- render 'pagination', paginate: paginate -%}
+        {%- endif -%}
+      </div>
+    </section>
+  {% else %}
+    {%- paginate blog.articles by section.settings.articles_limit -%}
+      <section class="c-articlesGrid color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding">
+        <div class="o-pageWidth">
+          <div class="c-articlesGrid__articlesWrapper">
+            {% for article in blog.articles limit: section.settings.articles_count %}
+              {% render 'card-article', article: article %}
+            {% endfor %}
+          </div>
+          {%- if paginate.pages > 1 -%}
+            {%- render 'pagination', paginate: paginate -%}
+          {%- endif -%}
+        </div>
+      </section>
+    {%- endpaginate -%}
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Articles Grid",
+  "settings": [
+    {
+      "type": "range",
+      "id": "articles_limit",
+      "min": 1,
+      "max": 36,
+      "step": 1,
+      "label": "Articles Per Page",
+      "default": 6
+    },
+    {
+      "type": "number",
+      "id": "articles_count",
+      "label": "Number of articles to display",
+      "default": 6
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "background-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top Mobile",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom Mobile",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Articles Grid"
+    }
+  ]
+}
+{% endschema %}

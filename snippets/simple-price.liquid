@@ -1,0 +1,143 @@
+{% comment %}
+  Render a Product Card in Predictive Search
+
+  usage:
+  {% render
+    'simple-price'
+    product: product,
+    showDiscount: true
+  %}
+{% endcomment %}
+
+{% assign max_percent_off = 0 %}
+{% if product.price_varies %}
+  {% for variant in product.variants %}
+    {% assign currentVariantDiscount = 0 %}
+    {% assign currentVariantDiscount = variant.compare_at_price
+      | minus: variant.price
+      | times: 100
+      | divided_by: variant.compare_at_price
+      | round: 2
+    %}
+    {% if currentVariantDiscount > max_percent_off %}
+      {% assign max_percent_off = currentVariantDiscount %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if product.price_varies %}
+  <div class="c-price c-price--simple c-b2{% if template contains 'search' or template contains 'product' %} c-price--mb{% endif %}{% unless discountValue > 0 %} c-price--simple{% endunless %}">
+    {% assign min_price = product.price_min | money %}
+    {% assign max_price = product.price_max | money %}
+    <span>{{- 'products.product.volume_pricing.price_range' | t: minimum: min_price, maximum: max_price -}}</span>
+    {% if showDiscount and max_percent_off > 0 %}
+      {% assign save_amount = product.compare_at_price | minus: product.price %}
+      {% assign save_amount_price = save_amount | divided_by: 100 | ceil %}
+      {% assign save_amount_price = save_amount_price | times: 100 %}
+      <span class="c-price__priceSave c-b3">
+        Up to
+        {{ max_percent_off -}}
+        % off {% if product.variants.size < 1 %}(Save {{ save_amount_price | money | remove: '.00' }}){% endif %}
+      </span>
+    {% endif %}
+  </div>
+{% else %}
+  {% if is_product_set and min_price != max_price %}
+    <div class="c-price c-price--simple c-b2{% if template contains 'search' or template contains 'product' %} c-price--mb{% endif %}{% unless discountValue > 0 %} c-price--simple{% endunless %}">
+      {% assign min_price = min_price | money %}
+      {% assign max_price = max_price | money %}
+      <span>{{- 'products.product.volume_pricing.price_range' | t: minimum: min_price, maximum: max_price -}}</span>
+      {% if showDiscount and max_percent_off > 0 %}
+        {% assign save_amount = product.compare_at_price | minus: product.price %}
+        {% assign save_amount_price = save_amount | divided_by: 100 | ceil %}
+        {% assign save_amount_price = save_amount_price | times: 100 %}
+        <span class="c-price__priceSave c-b3">
+          Up to
+          {{ max_percent_off -}}
+          % off {% if product.variants.size < 1 %}(Save {{ save_amount_price | money | remove: '.00' }}){% endif %}
+        </span>
+      {% endif %}
+    </div>
+  {% else %}
+    {%- if product.compare_at_price > product.price -%}
+      {% if stickyPrice == true %}
+        <div class="c-price c-b2{% if template contains 'search' or template contains 'product' %} c-price--mb{% endif %}">
+          <span class="visually-hidden">
+            {{ 'products.product.price.regular_price' | t }}
+          </span>
+          <span class="visually-hidden">
+            {{ 'products.product.price.sale_price' | t }}
+          </span>
+          {% assign discountValue = product.compare_at_price
+            | minus: product.price
+            | times: 100
+            | divided_by: product.compare_at_price
+            | round: 2
+          %}
+          {% if showDiscount and discountValue > 0 %}
+            <div>
+              <s class="c-price__priceOld c-b2 c-b2--regular{% unless template contains 'product' %} c-price__priceOld--grey{% endunless %}">
+                {{- product.compare_at_price | money -}}
+              </s>
+              <span class="visually-hidden">
+                {{ 'products.product.price.sale_price' | t }}
+              </span>
+              <strong class="c-price__priceFinal c-b2 c-b2--medium c-price__priceFinal--red">
+                {{ product.price | money }}
+              </strong>
+            </div>
+
+            {% if showDiscount and discountValue > 0 %}
+              <span class="c-price__priceSave c-b3">
+                {% assign save_amount = product.compare_at_price | minus: product.price %}
+                {% assign save_amount_price = save_amount | divided_by: 100 | ceil %}
+                {% assign save_amount_price = save_amount_price | times: 100 %}
+                {{ discountValue -}}
+                % off (Save {{ save_amount_price | money | remove: '.00' }})
+              </span>
+            {% endif %}
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="c-price c-b2{% if template contains 'search' or template contains 'product' %} c-price--mb{% endif %}">
+          <span class="visually-hidden">
+            {{ 'products.product.price.regular_price' | t }}
+          </span>
+          <s class="c-price__priceOld c-b2 c-b2--regular{% unless template contains 'product' or 'cart' %} c-price__priceOld--grey{% endunless %}">
+            {{- product.compare_at_price | money -}}
+          </s>
+          <span class="visually-hidden">
+            {{ 'products.product.price.sale_price' | t }}
+          </span>
+          <strong class="c-price__priceFinal c-b2 c-b2--medium{% unless template contains 'product' %} c-price__priceFinal--red{% endunless %}">
+            {{ product.price | money }}
+          </strong>
+          {% assign discountValue = product.compare_at_price
+            | minus: product.price
+            | times: 100
+            | divided_by: product.compare_at_price
+            | round: 2
+          %}
+          {% if showDiscount and discountValue > 0 %}
+            <span class="c-price__priceSave c-b3">
+              {% assign save_amount = product.compare_at_price | minus: product.price %}
+              {% assign save_amount_price = save_amount | divided_by: 100 | ceil %}
+              {% assign save_amount_price = save_amount_price | times: 100 %}
+              {{ discountValue -}}
+              % off (Save {{ save_amount_price | money | remove: '.00' }})
+            </span>
+          {% endif %}
+        </div>
+      {% endif %}
+    {%- else -%}
+      <div class="c-price c-price--simple c-b2{% if template contains 'search' or template contains 'product' %} c-price--mb{% endif %}">
+        {{ product.price | money }}
+      </div>
+    {%- endif -%}
+  {% endif %}
+{% endif %}
+{% if product.price < product.compare_at_price %}
+  <div class="sale-disclaimer">
+    {{ settings.sale_disclaimer }}
+   </div>
+{% endif %}  

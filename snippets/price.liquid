@@ -1,0 +1,264 @@
+{% comment %}
+  Renders a list of product's price (regular, sale)
+
+  Accepts:
+  - product: {Object} Product Liquid object (optional)
+  - use_variant: {Boolean} Renders selected or first variant price instead of overall product pricing (optional)
+  - show_badges: {Boolean} Renders 'Sale' and 'Sold Out' tags if the product matches the condition (optional)
+  - price_class: {String} Adds a price class to the price element (optional)
+  - show_compare_at_price: {Boolean} Renders the compare at price if the product matches the condition (optional)
+  - template: {String} Renders the price for PDP template (optional)
+
+  Usage:
+  {% render 'price', product: product %}
+{% endcomment %}
+{%- liquid
+  if use_variant
+    assign target = product.selected_or_first_available_variant
+  else
+    assign target = product
+  endif
+
+  assign compare_at_price = target.compare_at_price
+  assign price = target.price | default: 1999
+  assign price_min = target.price_min
+  assign price_max = target.price_max
+  assign available = target.available | default: false
+  assign money_price = price | money
+  assign money_price_min = price_min | money
+  assign money_price_max = price_max | money
+  if settings.currency_code_enabled
+    assign money_price = price | money_with_currency
+    assign money_price_min = price_min | money_with_currency
+    assign money_price_max = price_max | money_with_currency
+  endif
+
+  if target == product and product.price_varies
+    assign money_price = 'products.product.price.from_price_html' | t: price: money_price
+  endif
+-%}
+
+<div
+  class="
+    price
+    {%- if price_class %} {{ price_class }}{% endif -%}
+    {%- if available == false %} price--sold-out{% endif -%}
+    {%- if compare_at_price > price and product.quantity_price_breaks_configured? != true %} price--on-sale{% endif -%}
+    {%- if compare_at_price > price and product.quantity_price_breaks_configured? %} volume-pricing--sale-badge{% endif -%}
+    {%- if product.price_varies == false and product.compare_at_price_varies %} price--no-compare{% endif -%}
+    {%- if show_badges %} price--show-badge{% endif -%}
+  "
+>
+  <div class="price__container">
+    {%- comment -%}
+      Explanation of description list:
+        - div.price__regular: Displayed when there are no variants on sale
+        - div.price__sale: Displayed when a variant is a sale
+    {%- endcomment -%}
+
+    {% if stickyPrice == true %}
+      <div class="price__regular">
+        {%- if product.quantity_price_breaks_configured? -%}
+          {%- if show_compare_at_price -%}
+            {%- unless product.price_varies == false and product.compare_at_price_varies %}
+              <span>
+                <s class="price-item price-item--regular variant-item__old-price">
+                  {% if settings.currency_code_enabled %}
+                    {{ compare_at_price | money_with_currency }}
+                  {% else %}
+                    {{ compare_at_price | money }}
+                  {% endif %}
+                </s>
+              </span>
+            {%- endunless -%}
+          {%- endif -%}
+          <span class="price-item price-item--regular" awefwe>
+            {{-
+              'products.product.volume_pricing.price_range'
+              | t: minimum: money_price_min, maximum: money_price_max
+            -}}
+          </span>
+        {%- else -%}
+          {%- liquid
+            if productSet
+              assign total_price = 0.0
+
+              for child_product in product.metafields.product_sets.child_products.value
+                assign total_price = total_price | plus: child_product.variants[0].price
+              endfor
+            endif
+          -%}
+          {%- if productSet -%}
+            <span
+              class="price-item price-item--regular c-b2 c-b2--regular"
+              {% if isDesktop %}
+                data-set-total-price-desktop
+              {% else %}
+                data-set-total-price-mobile
+              {% endif %}
+            >
+              {{ total_price | money }}
+            </span>
+          {%- else -%}
+            <span class="price-item price-item--regular c-b2 c-b2--regular">
+              {{ money_price }}
+            </span>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+      <div class="price__sale">
+        <div>
+          {%- unless product.price_varies == false and product.compare_at_price_varies %}
+            {% if product.price_varies != true %}
+              <span>
+                <s class="price-item price-item--regular c-b2 c-b2--regular">
+                  {% if settings.currency_code_enabled %}
+                    {{ compare_at_price | money_with_currency }}
+                  {% else %}
+                    {{ compare_at_price | money }}
+                  {% endif %}
+                </s>
+              </span>
+            {% endif %}
+          {%- endunless -%}
+          {% if product.price_varies == true %}
+            <span class="price-item price-item--regular c-b2 c-b2--regular">
+              {{ compare_at_price | money }}
+            </span>
+            <span class="price-item price-item--sale price-item--last c-b2">
+              {{ money_price }}
+            </span>
+          {% endif %}
+          {% if product.price_varies != true %}
+            <span class="price-item price-item--sale price-item--last c-b2">
+              {{ money_price }}
+            </span>
+          {% endif %}
+        </div>
+        {% if settings.show_save == true %}
+          <span class="c-priceItem--saving c-b3 c-b3--regular">
+            {{ compare_at_price | minus: target.price | times: 100 | divided_by: compare_at_price }}% off (Save
+            {{ compare_at_price | minus: target.price | money_without_trailing_zeros }})
+          </span>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="price__regular">
+        {%- if product.quantity_price_breaks_configured? -%}
+          {%- if show_compare_at_price -%}
+            {%- unless product.price_varies == false and product.compare_at_price_varies %}
+              <span class="visually-hidden visually-hidden--inline">
+                {{- 'products.product.price.regular_price' | t -}}
+              </span>
+              <span>
+                <s class="price-item price-item--regular variant-item__old-price">
+                  {% if settings.currency_code_enabled %}
+                    {{ compare_at_price | money_with_currency }}
+                  {% else %}
+                    {{ compare_at_price | money }}
+                  {% endif %}
+                </s>
+              </span>
+            {%- endunless -%}
+          {%- endif -%}
+          <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.regular_price' | t }}</span>
+          <span class="price-item price-item--regular">
+            {{-
+              'products.product.volume_pricing.price_range'
+              | t: minimum: money_price_min, maximum: money_price_max
+            -}}
+          </span>
+        {%- else -%}
+          <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.regular_price' | t }}</span>
+          {%- if productSet -%}
+            {%- liquid
+              if productSet
+                assign total_price = 0.0
+
+                for child_product in product.metafields.product_sets.child_products.value
+                  assign total_price = total_price | plus: child_product.variants[0].price
+                endfor
+              endif
+            -%}
+            <span
+              class="price-item price-item--regular {% if template == 'pdp' %}c-priceItem--regular c-h4{% elsif template == 'pdp-bottom' %}c-priceItem-bottom c-b2 c-b2--regular{% else %}price-item--regular c-b2{% endif %}"
+              {% if isDesktop %}
+                data-set-total-price-desktop
+              {% else %}
+                data-set-total-price-mobile
+              {% endif %}
+            >
+              {{ total_price | money }}
+            </span>
+          {%- else -%}
+            <span class="price-item price-item--regular {% if template == 'pdp' %}c-priceItem--regular c-h4{% elsif template == 'pdp-bottom' %}c-priceItem-bottom c-b2 c-b2--regular{% else %}price-item--regular c-b2{% endif %}">
+              {{ money_price }}
+            </span>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+      <div class="price__sale">
+        {%- unless product.price_varies == false and product.compare_at_price_varies %}
+          {% if product.price_varies != true %}
+            <span>
+              <s class="price-item {% if template == 'pdp' %}c-priceItem--regular c-h4{% elsif template == 'pdp-bottom' %}c-priceItem-bottom c-b2 c-b2--regular{% else %}price-item--regular c-b2{% endif %}">
+                {% if settings.currency_code_enabled %}
+                  {{ compare_at_price | money_with_currency }}
+                {% else %}
+                  {{ compare_at_price | money }}
+                {% endif %}
+              </s>
+            </span>
+          {% endif %}
+        {%- endunless -%}
+
+        {% if product.price_varies == true %}
+          <span class="visually-hidden visually-hidden--inline">
+            {{- 'products.product.price.regular_price' | t -}}
+          </span>
+          <span class="price-item price-item--regular {% if template == 'pdp' %}c-priceItem--regular c-h4{% elsif template == 'pdp-bottom' %}c-priceItem-bottom c-b2 c-b2--regular{% else %}price-item--regular c-b2{% endif %}">
+            {{ compare_at_price | money }}
+          </span>
+          <span class="visually-hidden visually-hidden--inline">{{ 'products.product.price.sale_price' | t }}</span>
+          <span class="price-item {% if template == 'pdp' %}c-priceItem--sale c-h4{% elsif template == 'pdp-bottom' %}c-priceItem-bottom--sale c-b1 c-b1--strong{% else %}price-item--sale price-item--last c-b2{% endif %}">
+            {{ money_price }}
+          </span>
+        {% endif %}
+        {% if product.price_varies != true %}
+          <span class="price-item {% if template == 'pdp' %}c-priceItem--sale c-h4{% elsif template == 'pdp-bottom' %}c-priceItem-bottom--sale c-b1 c-b1--strong{% else %}price-item--sale price-item--last c-b2{% endif %}">
+            {{ money_price }}
+          </span>
+        {% endif %}
+        {% if settings.show_save == true %}
+          <span class="{% if template == 'pdp' %}c-priceItem--saving c-b2 c-b2--regular{% elsif template == 'pdp-bottom' %}c-priceItem--saving c-b2 c-b2--regular{% else %}c-proCard__saving c-b3{% endif %}">
+            {{ compare_at_price | minus: target.price | times: 100 | divided_by: compare_at_price }}% off (Save
+            {{ compare_at_price | minus: target.price | money_without_trailing_zeros }})
+          </span>
+        {% endif %}
+      </div>
+      <small class="unit-price caption{% if product.selected_or_first_available_variant.unit_price_measurement == nil %} hidden{% endif %}">
+        <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
+        <span class="price-item price-item--last c-b2">
+          <span>{{- product.selected_or_first_available_variant.unit_price | money -}}</span>
+          <span aria-hidden="true">/</span>
+          <span class="visually-hidden">&nbsp;{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span>
+          <span>
+            {%- if product.selected_or_first_available_variant.unit_price_measurement.reference_value != 1 -%}
+              {{- product.selected_or_first_available_variant.unit_price_measurement.reference_value -}}
+            {%- endif -%}
+            {{ product.selected_or_first_available_variant.unit_price_measurement.reference_unit }}
+          </span>
+        </span>
+      </small>
+    {% endif %}
+  </div>
+  {%- if show_badges -%}
+    <span class="badge price__badge-sale color-{{ settings.sale_badge_color_scheme }}">
+      {{ 'products.product.on_sale' | t }}
+    </span>
+
+    <span class="badge price__badge-sold-out color-{{ settings.sold_out_badge_color_scheme }}">
+      {{ 'products.product.sold_out' | t }}
+    </span>
+  {%- endif -%}
+</div>

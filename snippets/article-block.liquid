@@ -1,0 +1,40 @@
+{% assign targetAspectRatio = 1.5 %}
+{% assign currentAspectRatio = article.image.aspect_ratio | round: 1 %}
+{% assign imageHeight = article.image.width %}
+{% assign imageWidth = article.image.height %}
+
+{% if currentAspectRatio > targetAspectRatio %}
+  {% assign imageHeight = article.image.height %}
+  {% assign imageWidth = imageHeight | times: targetAspectRatio %}
+{% elsif currentAspectRatio < targetAspectRatio %}
+  {% assign imageWidth = article.image.width %}
+  {% assign imageHeight = imageWidth | divided_by: targetAspectRatio %}
+{% else %}
+  {% assign imageWidth = article.image.width %}
+  {% assign imageHeight = article.image.height %}
+{% endif %}
+
+<article class="c-articlesBlock">
+  <div class="c-articlesBlock_imgLinkWrapper">
+    <div class="c-articlesBlock__imgWrapper" tabindex="-1">
+      {{
+        article.image
+        | image_url: width: imageWidth, height: imageHeight
+        | image_tag: loading: 'lazy', class: 'c-articlesBlock__imgTag'
+      }}
+    </div>
+    <div class="c-articlesBlock__linkWrapper">
+      <a href="{{ article.url }}" class="c-articlesBlock__imgLink"></a>
+    </div>
+  </div>
+  <div class="c-articlesBlock__info">
+    <div class="c-articlesBlock__infoWrapper">
+      <h3 class="c-articlesBlock__title">
+        <a href="{{ article.url }}" class="c-articlesBlock__titleLink c-b1">
+          {{ article.title | escape }}
+        </a>
+      </h3>
+      <p class="c-articlesBlock__publishedDate c-b2">{{ article.published_at | date: '%B %d, %Y' }}</p>
+    </div>
+  </div>
+</article>

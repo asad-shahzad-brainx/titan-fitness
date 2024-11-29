@@ -1,0 +1,23 @@
+{% assign collectionBOC = collection.metafields.seo.bottom_content.value %}
+
+{% if collectionBOC != blank %}
+    {{ collectionBOC }}
+{% endif %}
+
+{% schema %}
+{
+  "name": "SEO: Bottom Content",
+  "class": "seo-content",
+  "settings": [
+    {
+        "type": "paragraph",
+        "content": "Outputs Collection Metafield: 'SEO: Bottom Content'"
+    }
+  ],
+  "presets": [
+    {
+      "name": "SEO: Bottom Content"
+    }
+  ]
+}
+{% endschema %}

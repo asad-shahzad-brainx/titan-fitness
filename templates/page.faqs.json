@@ -1,0 +1,82 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "47511ec7-5935-4a97-9fe9-104264eab01e": {
+      "type": "faqs",
+      "blocks": {
+        "fa79d1cb-9f47-43d3-a0c5-8496d1158b59": {
+          "type": "faq",
+          "settings": {
+            "heading": "What is a power rack?",
+            "content": "<p>The power rack is considered the safest option for performing heavy lifts such as squats and bench presses. The squat stand is a basic setup but great when you only have limited space available. Not to be confused with a squat cage, a squat stand is constructed with only two vertical steel posts; the squat stand allows the lifter to move freely in and out of the platform. The squat stand assists with many of the same lifts as the power rack; the squat stand is limited with weight capacity, safety guards, and attachments.<\/p>"
+          }
+        },
+        "2d14c58d-93ca-460d-9a53-f776b94352e1": {
+          "type": "faq",
+          "settings": {
+            "heading": "What are the benefits of a power rack?",
+            "content": "<p>The power rack is considered the safest option for performing heavy lifts such as squats and bench presses. The squat stand is a basic setup but great when you only have limited space available. Not to be confused with a squat cage, a squat stand is constructed with only two vertical steel posts; the squat stand allows the lifter to move freely in and out of the platform. The squat stand assists with many of the same lifts as the power rack; the squat stand is limited with weight capacity, safety guards, and attachments.<\/p>"
+          }
+        },
+        "5fc9276c-e065-40a5-860d-65b57d6113e5": {
+          "type": "faq",
+          "settings": {
+            "heading": "What is a power rack or squat cage used for?",
+            "content": "<p>The power rack is considered the safest option for performing heavy lifts such as squats and bench presses. The squat stand is a basic setup but great when you only have limited space available. Not to be confused with a squat cage, a squat stand is constructed with only two vertical steel posts; the squat stand allows the lifter to move freely in and out of the platform. The squat stand assists with many of the same lifts as the power rack; the squat stand is limited with weight capacity, safety guards, and attachments.<\/p>"
+          }
+        },
+        "c914bbca-4e5e-4544-bd2f-463a0f6ec8ac": {
+          "type": "faq",
+          "settings": {
+            "heading": "What’s the best power rack?",
+            "content": "<p>The power rack is considered the safest option for performing heavy lifts such as squats and bench presses. The squat stand is a basic setup but great when you only have limited space available. Not to be confused with a squat cage, a squat stand is constructed with only two vertical steel posts; the squat stand allows the lifter to move freely in and out of the platform. The squat stand assists with many of the same lifts as the power rack; the squat stand is limited with weight capacity, safety guards, and attachments.<\/p>"
+          }
+        },
+        "2465c0ec-8bc6-4e13-ac88-fe6a5910f95b": {
+          "type": "faq",
+          "settings": {
+            "heading": "What’s the difference between a power rack and a squat stand?",
+            "content": "<p>The power rack is considered the safest option for performing heavy lifts such as squats and bench presses. The squat stand is a basic setup but great when you only have limited space available. Not to be confused with a squat cage, a squat stand is constructed with only two vertical steel posts; the squat stand allows the lifter to move freely in and out of the platform. The squat stand assists with many of the same lifts as the power rack; the squat stand is limited with weight capacity, safety guards, and attachments.<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "fa79d1cb-9f47-43d3-a0c5-8496d1158b59",
+        "2d14c58d-93ca-460d-9a53-f776b94352e1",
+        "5fc9276c-e065-40a5-860d-65b57d6113e5",
+        "c914bbca-4e5e-4544-bd2f-463a0f6ec8ac",
+        "2465c0ec-8bc6-4e13-ac88-fe6a5910f95b"
+      ],
+      "settings": {
+        "heading": "Power Rack FAQ's",
+        "heading_tag": "h2",
+        "description": "<p>The power rack is considered the safest option for performing heavy lifts such as squats and bench presses. The squat stand is a basic setup but great when you only have limited space available. Not to be confused with a squat cage, a squat stand is constructed with only two vertical steel posts; the squat stand allows the lifter to move freely in and out of the platform. The squat stand assists with many of the same lifts as the power rack; the squat stand is limited with weight capacity, safety guards, and attachments.<\/p>",
+        "color_scheme": "background-2",
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40
+      }
+    }
+  },
+  "order": [
+    "main",
+    "47511ec7-5935-4a97-9fe9-104264eab01e"
+  ]
+}

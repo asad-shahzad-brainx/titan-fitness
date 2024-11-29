@@ -1,0 +1,78 @@
+{% comment %}
+    Quantity input
+
+    Accepts:
+    - variant: {Object} Variant object
+    - variant_id: {String} Variant ID (optional)
+
+    Usage:
+    {%- render
+    'quantity-dropdown'
+    product: product,
+    product_form_id: product_form_id,
+    cart_qty: cart_qty,
+    section_id: section.id
+  -%}
+{% endcomment %}
+
+{% liquid
+  assign start_qty = 1
+%}
+
+<div
+  class="c-quantityDropDown {% if product.selected_or_first_available_variant.available == false %} c-quantityDropDown--hide{% endif %}"
+  data-parent-selector
+  id="c-quantity-{{ section_id }}"
+>
+  <quantity-dropdown
+    class="quantity"
+    data-url="{{ product.url }}"
+    data-section="{{ id }}"
+  >
+    <select
+      {% if productSet %}
+        data-price="{{ variant.price }}"
+        {% if isDesktop == true %} data-price-desktop="{{ variant.price }}" {% endif %}
+        {% if isDesktop == false %} data-price-mobile="{{ variant.price }}" {% endif %}
+        data-id="{{ variant.id }}"
+      {% endif %}
+      class="quantity__select c-a1"
+      name="quantity"
+      id="Quantity-{{ section_id }}"
+      data-cart-quantity="{{ cart_qty }}"
+      form="{{ product_form_id }}"
+      data-quantity-input
+      {% if isDesktop == true %}
+        data-quantity-input-desktop
+      {% endif %}
+      {% if isDesktop == false %}
+        data-quantity-input-mobile
+      {% endif %}
+      aria-label="Product quantity dropdown"
+    >
+      {% if productSet %}
+        {% for i in (0..10) %}
+          <option
+            value="{{ i }}"
+            {% if i == 1 and variant.available %}
+              selected
+            {% endif %}
+          >
+            {{ i }}
+          </option>
+        {% endfor %}
+      {% else %}
+        {% for i in (start_qty..10) %}
+          <option
+            value="{{ i }}"
+            {% if i == 1 %}
+              selected
+            {% endif %}
+          >
+            {{ i }}
+          </option>
+        {% endfor %}
+      {% endif %}
+    </select>
+  </quantity-dropdown>
+</div>

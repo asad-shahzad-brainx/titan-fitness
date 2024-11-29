@@ -1,0 +1,111 @@
+{% comment %}
+  Render a Product Card Tile
+
+  usage:
+  {% render
+    'card-product-set'
+    variant: variant,
+    block_id: block.id,
+    section_id: section.id
+    _product: product,
+    productSet: productSet
+  %}
+{% endcomment %}
+
+{% liquid
+  assign product_form_id = 'product-set-form-' | append: section_id | append: variant.id
+  assign cart_qty = variant.inventory_quantity
+%}
+<div class="c-cardSet">
+  {% unless _product.available %}
+    <toggle-notify>
+  {% endunless %}
+  <div class="c-cardSet__content">
+    {%- if _product.featured_media != blank -%}
+      <div class="c-cardSet__media">
+        <img
+          class="c-cardSet__img"
+          src="{{ _product.featured_media | image_url: width: 140 }}"
+          alt="{{ _product.featured_media.alt }}"
+          width="64"
+          height="{{ 64 | divided_by: _product.featured_media.preview_image.aspect_ratio }}"
+          loading="lazy"
+        >
+      </div>
+    {% else %}
+      <div class="c-cardSet__media">
+        <img
+          class="c-cardSet__img"
+          src="{{ _product.featured_image | image_url: width: 140 }}"
+          alt="{{ _product.featured_image.alt }}"
+          width="64"
+          height="{{ 64 | divided_by: _product.featured_image.preview_image.aspect_ratio }}"
+          loading="lazy"
+        >
+      </div>
+    {%- endif -%}
+    <div class="c-cardSet__info">
+      {% if _product.compare_at_price > _product.price %}
+        {% if settings.sale_badge_text != blank %}
+          <div class="c-proCard__badge c-proCard__badge--offer c-b3">
+            {% render 'icon-clock', classes: 'o-icon__clock' %}
+            {{ settings.sale_badge_text }}
+          </div>
+        {% endif %}
+      {% endif %}
+
+      <a class="c-cardSet__link fully-unstyled-link" href="{{ variant.url }}">
+        <p class="c-cardSet__heading c-b1 c-b1--strong">
+          {{ _product.title | escape }}
+        </p>
+      </a>
+      {% render 'simple-price', product: _product, showDiscount: true %}
+
+      {% if variant.sku != blank %}
+        <p class="c-cardSet__sku c-b3">SKU: {{ variant.sku }}</p>
+      {% endif %}
+
+      {% liquid
+        if variant.metafields.custom.backorder_available_date.value != blank and variant.metafields.custom.backorder_status.value == true
+          render 'backorder', backOrder: variant.metafields.custom.backorder_available_date.value, classes: 'c-b2 c-b2--strong '
+        else
+          if variant.available
+            if variant.inventory_quantity > threshold
+              render 'in-stock', classes: 'c-b2 c-b2--strong '
+            else
+              render 'low-stock', classes: 'c-b2 c-b2--strong '
+            endif
+          else
+            render 'out-of-stock', classes: 'c-b2 c-b2--strong ', notifyText: false
+          endif
+        endif
+      %}
+    </div>
+  </div>
+  <div class="c-cardSet__form {% if variant.available == false %}c-cardSet__form--oos{% endif %}">
+    {%- render 'quantity-dropdown',
+      product: _product,
+      product_form_id: product_form_id,
+      cart_qty: cart_qty,
+      section_id: section_id,
+      is_variant: true,
+      variant: variant,
+      productSet: true,
+      isDesktop: isDesktop
+    -%}
+    {%- render 'buy-buttons',
+      product: _product,
+      product_form_id: product_form_id,
+      section_id: section_id,
+      show_pickup_availability: false,
+      is_variant: true,
+      variant: variant,
+      productSet: true,
+      backOrderLabel: variant.metafields.custom.back_order.value,
+      backOrderAtcLabel: variant.metafields.custom.backorder_status.value
+    -%}
+  </div>
+  {% unless variant.available %}
+    </toggle-notify>
+  {% endunless %}
+</div>

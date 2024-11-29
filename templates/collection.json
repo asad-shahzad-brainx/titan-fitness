@@ -1,0 +1,153 @@
+/*
+* ------------------------------------------------------------
+* IMPORTANT: The contents of this file are auto-generated.
+*
+* This file may be updated by the Shopify admin theme editor
+* or related systems. Please exercise caution as any changes
+* made to this file may be overwritten.
+* ------------------------------------------------------------
+*/
+{
+  "sections": {
+    "banner": {
+      "type": "main-collection-banner",
+      "blocks": {
+        "6b937500-2177-47ec-b531-310153552573": {
+          "type": "shopify://apps/category-breadcrumbs/blocks/category-breadcrumbs/dba51573-4328-452d-90db-1ad2dc5be363",
+          "settings": {
+            "override_linktext_colour": false,
+            "linktext_colour": "#0000ee",
+            "separator_colour": "#555555",
+            "producttitle_colour": "#555555",
+            "title_decoration": "",
+            "title_transform": "",
+            "spacing_above": 0,
+            "spacing_below": 0,
+            "sep_plus_class": "breadcrumb__sep_plus3",
+            "separator_char_code": "#47;",
+            "hide_old_breadcrumb": false,
+            "show_catroot": true,
+            "link_catroot": "/",
+            "text_catroot": "Home",
+            "show_tags": true,
+            "show_finalbread_as_textonly": true,
+            "insert_jsonld": true,
+            "insert_shortlinkfix": false,
+            "prod_multicat_sel": "leastprod",
+            "link_catall": "/collections/all",
+            "text_catall": "All Products",
+            "show_product_title": true,
+            "truncate_limit": 0,
+            "prod_ignore_referrer": false,
+            "old_breadcrumb_class": "breadcrumb"
+          }
+        }
+      },
+      "block_order": [
+        "6b937500-2177-47ec-b531-310153552573"
+      ],
+      "settings": {
+        "show_collection_description": true,
+        "description_max_lines": 2,
+        "show_subheading": true,
+        "color_scheme": "background-2"
+      }
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid",
+      "settings": {
+        "products_per_page": 24,
+        "columns_desktop": 4,
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": true,
+        "enable_quick_add": false,
+        "enable_filtering": true,
+        "filter_type": "drawer",
+        "enable_sorting": true,
+        "columns_mobile": "1",
+        "free_shipping": true,
+        "buy_now_pay_later": true,
+        "save": true,
+        "padding_top": 0,
+        "padding_bottom": 48,
+        "padding_top_mobile": 0,
+        "padding_bottom_mobile": 16,
+        "color_scheme": "background-2"
+      }
+    },
+    "seo_collection_boc_UzATJk": {
+      "type": "seo-collection-boc",
+      "disabled": true,
+      "custom_css": [
+        "{background-color: #f2f2f2;}"
+      ],
+      "settings": {
+      }
+    },
+    "97107932-c762-4a8d-8ee9-440fe513aa5b": {
+      "type": "collections-faqs",
+      "settings": {
+        "heading": "",
+        "heading_tag": "h2",
+        "description": "",
+        "color_scheme": "background-2",
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40
+      }
+    },
+    "seo_collection_video_kADDCN": {
+      "type": "seo-collection-video",
+      "custom_css": [
+        "{background-color: #f2f2f2; padding: 0px 0 48px;}"
+      ],
+      "settings": {
+      }
+    },
+    "seo_collection_cta_ydMyFi": {
+      "type": "seo-collection-cta",
+      "disabled": true,
+      "custom_css": [
+        "{background-color: #f2f2f2; padding: 0 0 48px;}"
+      ],
+      "settings": {
+      }
+    },
+    "seo_collection_cw_N8gYTA": {
+      "type": "seo-collection-cw",
+      "disabled": true,
+      "custom_css": [
+        "{background-color: #f2f2f2; padding: 0 0 48px;}"
+      ],
+      "settings": {
+      }
+    },
+    "2958768d-5901-4ed5-886a-9851c8412ff2": {
+      "type": "collections-testimonials",
+      "disabled": true,
+      "settings": {
+        "heading": "",
+        "heading_tag": "h2",
+        "color_scheme": "background-1",
+        "padding_top": 48,
+        "padding_bottom": 48,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "product-grid",
+    "seo_collection_boc_UzATJk",
+    "97107932-c762-4a8d-8ee9-440fe513aa5b",
+    "seo_collection_video_kADDCN",
+    "seo_collection_cta_ydMyFi",
+    "seo_collection_cw_N8gYTA",
+    "2958768d-5901-4ed5-886a-9851c8412ff2"
+  ]
+}

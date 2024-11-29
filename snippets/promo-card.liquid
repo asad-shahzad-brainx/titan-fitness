@@ -1,0 +1,32 @@
+{% comment %}
+  {% render 'promo-card', promoImg: promoImg, promoSubheading: promoSubheading, PosterHeading: promoHeading, PosterLink: PosterLink  %}
+{% endcomment %}
+<div class="c-poster">
+  <div class="c-poster__container">
+    {% if promoImg != blank %}
+      <div class="c-poster__imgWrapper">
+        {%- liquid
+          assign image_height = PosterImg | divided_by: promoImg.aspect_ratio
+        -%}
+        {{
+          promoImg
+          | image_url: width: PosterImg.width
+          | image_tag: loading: 'lazy', height: image_height, class: 'c-poster__img'
+        }}
+      </div>
+    {% endif %}
+    <div class="c-poster__content">
+      {% if promoSubheading != blank %}
+        <h4 class="c-poster__subheading c-h4">{{ promoSubheading }}</h4>
+      {% endif %}
+      {% if promoHeading != blank %}
+        <h3 class="c-poster__heading">{{ promoHeading }}</h3>
+      {% endif %}
+    </div>
+    {% if promoLink != blank %}
+      <a class="c-poster__link" href="{{ promoLink }}">
+        <span class="u-hide">Poster Link</span>
+      </a>
+    {% endif %}
+  </div>
+</div>

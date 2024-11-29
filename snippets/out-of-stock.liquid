@@ -1,0 +1,14 @@
+<div class="c-outOfStock">
+  <p class="{{ classes }} c-outOfStock__message">
+    {% render 'icon-out-of-stock', classes: 'o-icon__outOfStock' %}
+    Out Of Stock
+    {% if notifyText %}
+      <span
+        class="c-b2 c-outOfStock__notify"
+        data-notify-form="true"
+      >
+        Notify me when this is in stock
+      </span>
+    {% endif %}
+  </p>
+</div>

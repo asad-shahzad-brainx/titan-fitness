@@ -1,0 +1,101 @@
+{% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+{{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  @media screen and (max-width: 749px) {
+    .collection-hero--with-image .collection-hero__inner {
+      padding-bottom: calc({{settings.media_shadow_vertical_offset | at_least: 0}}px + 2rem);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .c-collectionHero__description--toggle {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: {{ section.settings.description_max_lines }};
+      line-clamp: {{ section.settings.description_max_lines }};
+      -webkit-box-orient: vertical;
+    }
+  }
+{%- endstyle -%}
+
+<div
+  class="c-collectionHero collection-hero color-{{ section.settings.color_scheme }} gradient"
+  data-grid-header
+>
+  <div class="collection-hero__inner page-width o-pageWidth {% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
+    <div class="collection-hero__text-wrapper">
+      {% for block in section.blocks %}
+        {% render block %}
+      {% endfor %}
+      <h1 class="collection-hero__title c-h2">
+        {{- collection.title | escape -}}
+      </h1>
+      {% if collection.metafields.custom.collections_subheading != blank and section.settings.show_subheading %}
+        <h2 class="c-collectionHero__subheading c-h4">{{ collection.metafields.custom.collections_subheading }}</h2>
+      {% endif %}
+      {%- if section.settings.show_collection_description and collection.description != blank -%}
+        <div class="collection-hero__description rte">
+          <p class="c-collectionHero__description c-collectionHero__description--desktop c-b2">
+            {{ collection.description }}
+          </p>
+          <description-toggle>
+            <p
+              class="c-collectionHero__description c-collectionHero__description--mobile c-collectionHero__description--toggle c-b2"
+              data-mobile-collection-wrapper
+            >
+              {{ collection.description | strip_html }}
+            </p>
+            <button class="c-collectionHero__description-toggle c-b2" data-description-toggle>Read More</button>
+          </description-toggle>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-collection-banner.name",
+  "class": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:sections.main-collection-banner.settings.paragraph.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "default": true,
+      "label": "t:sections.main-collection-banner.settings.show_collection_description.label"
+    },
+    {
+      "type": "number",
+      "label": "Show Description Max Lines",
+      "id": "description_max_lines",
+      "default": 2
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subheading",
+      "default": true,
+      "label": "Show Subheading"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "background-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["collection"]
+  }
+}
+{% endschema %}

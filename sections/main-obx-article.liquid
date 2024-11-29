@@ -1,0 +1,315 @@
+{% assign sidebar_enabled = article.metafields.seo.sidebar_enabled.value %}
+{% assign sidebar_prods = article.metafields.seo.sidebar_products.value %}
+{% assign article_best_sellers = article.metafields.seo.best_sellers.value %}
+
+{%- style -%}
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+
+    {%- unless sidebar_enabled -%}
+        #obx-article-details{ max-width: 100%; }
+    {%- endunless-%}
+
+    main{
+        background-color: #F2F2F2;
+    }
+
+    section.c-customerSupport{
+        background-color: #fff;
+    }
+
+    @media screen and (min-width: 750px) {
+      .section-{{ section.id }}-padding {
+        padding-top: {{ section.settings.padding_top }}px;
+        padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+    }
+  {%- endstyle -%}
+
+  <section class=" section-{{ section.id }}-padding">
+    <div class="o-pageWidth">
+
+      <div id="obx-article-container">
+
+         {%- if sidebar_enabled %}
+            <div id="obx-article-sidebar">
+             <div class="sidebar-inner">
+              {%- if section.settings.sidebar_cats != blank %}
+                  <div class="sb-block sb-categories">
+                      <div class="sb-heading">Categories</div>
+                      {{ section.settings.sidebar_cats }}
+                  </div>
+              {%- endif -%}
+
+              {%- if sidebar_prods != blank %}
+                  {% for data in sidebar_prods %}
+                      {% for block in data.sidebar_products %}
+                          <div class="sb-block sb-products">
+                              <div class="sb-heading">{{ block.title }}</div>
+                              <ul>
+                                {% for prodItem in block.products %}
+                                    {% assign is_true_product = false %}
+                                    {% if all_products[prodItem.prod_handle].title != '' %}
+                                        {% assign is_true_product = true %}
+                                    {% endif %}
+                                    {% if is_true_product %}
+                                        <li class="obx-prodItem">{% render 'obx-card-product', 
+                                                product_handle: prodItem.prod_handle,
+                                                custom_img: prodItem.custom_image,
+                                                custom_title: prodItem.custom_title
+                                            %}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                          </div>
+                      {% endfor %}
+                  {% endfor %}
+              {%- endif -%}
+              </div>
+            </div>
+         {%- endif -%}
+
+          <div id="obx-article-details">
+
+            {% if section.settings.show_breadcrumbs %}
+                <div class="c-articleDetails__breadcrumbs">
+                  {% render 'breadcrumbs', list: section.settings.menu, current: blog.handle %}
+                </div>
+            {% endif %}
+
+            {% for block in section.blocks %}
+
+              {% if block.type == 'text' %}
+                <div id="obx-article-header">
+                    {% if block.settings.show_date %}
+                        <p class="article-meta-title date">{{ article.published_at | date: '%B %d, %Y' }}</p>
+                    {% endif %}
+                    <h1>{{ article.title }}</h1>
+                    <div class="article-meta">
+                        {% if block.settings.show_social %}
+
+                        {% assign blog_post_url = canonical_url %}
+                        {% assign email_subject = "Check out this amazing blog post!" %}
+                        {% assign email_body = "I thought you might find this interesting: " | append: blog_post_url  %}
+
+                        <div class="article-share">
+                            <ul class="share-links">
+                                <li><a target="_blank" rel="noopener nofollow" href="https://www.facebook.com/sharer/sharer.php?u={{ blog_post_url | url_encode }}"><div class="obx-icon fb-icon"></div></a></li>
+                                <li><a target="_blank" rel="noopener nofollow" href="https://twitter.com/intent/tweet?url={{ blog_post_url | url_encode }}&text={{ article.title | strip_html | replace: ' ', '%20' }}"><div class="obx-icon tweet-icon"></div></a></li>
+                                <li><a href="mailto:?subject={{ email_subject }}&body={{ email_body }}"><div class="obx-icon email-icon"></div></a></li>
+                            </ul>
+                        </div>
+                        {% endif %}
+                        {% if block.settings.show_tags %}
+                            <div class="article-tag-container">
+                              <ul class="article-tags">
+                                  {% for tag in article.tags %}
+                                  <li>{{ tag }}<span class="tag-separator">,</span></li>
+                                  {% endfor %}
+                              </ul>
+                            </div>
+                        {% endif %}
+                    </div>  
+                </div>
+              {% endif %}
+
+              {% if block.type == 'content' %}
+                  {%- if article.content != blank %}
+                    {% if article.content contains '<!-- split -->' %}
+                        <div class="article--top-half">
+                            {{ article.content | split: '<!-- split -->' | first }}   
+                        </div>
+                    {% else %}
+                        <div class="article--full">
+                            {{ article.content }}
+                        </div>
+                    {% endif %}
+                  {%- endif -%}                  
+            
+
+                {%- if article_best_sellers != blank %}
+                    {% for data in article_best_sellers %}
+                    {% for block in data.seo_best_selling_products %}
+                        <section id="article--best-sellers">
+                            <h2>{{ block.title }}</h2>
+                            <div class="product--grid">
+                                {% for prodItem in block.products %}
+                                    {% assign is_true_product = false %}
+                                    {% if all_products[prodItem.prod_handle].title != '' %}
+                                        {% assign is_true_product = true %}
+                                    {% endif %}
+                                    {% if is_true_product %}
+                                        <div class="swiper-slide obx-prodItem"> 
+                                            {% render 'obx-card-product', 
+                                                    product_handle: prodItem.prod_handle,
+                                                    custom_img: prodItem.custom_image,
+                                                    custom_title: prodItem.custom_title
+                                                %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </section>
+
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+
+                {%- if article.content != blank %}
+                    {% if article.content contains '<!-- split -->'%}
+                        <div class="article--bottom-half">
+                            {{ article.content | split: '<!-- split -->' | last }}
+                        </div>
+                    {% else %}
+                    {% endif %}
+                {%- endif -%}
+              {% endif %} 
+
+              {% if block.type == 'footer' %}
+                    <div id="obx-article-footer">
+                        {% if block.settings.show_back %}
+                        <div class="return-link">
+                            <a href="{{ blog.url }}">All Articles</a>
+                        </div>
+                        {% endif %}
+                        {% if block.settings.show_social %}
+
+                            {% assign blog_post_url = canonical_url %}
+                            {% assign email_subject = "Check out this amazing blog post!" %}
+                            {% assign email_body = "I thought you might find this interesting: " | append: blog_post_url  %}
+
+                            <div class="article-share">
+                                <div class="article-meta-title">Share This Article:</div>
+                                <ul class="share-links">
+                                    <li><a target="_blank" rel="noopener nofollow" href="https://www.facebook.com/sharer/sharer.php?u={{ blog_post_url | url_encode }}"><div class="obx-icon fb-icon"></div></a></li>
+                                    <li><a target="_blank" rel="noopener nofollow" href="https://twitter.com/intent/tweet?url={{ blog_post_url | url_encode }}&text={{ article.title | strip_html | replace: ' ', '%20' }}"><div class="obx-icon tweet-icon"></div></a></li>
+                                    <li><a href="mailto:?subject={{ email_subject | url_encode }}&body={{ email_body | url_encode }}"><div class="obx-icon email-icon"></div></a></li>
+                                </ul>
+                            </div> 
+                        {% endif %}
+                    </div>
+              {% endif %}
+            {% endfor %}
+
+          </div>
+      </div>
+    </div>
+  </section>
+
+
+  {% schema %}
+  {
+    "name": "Blog Detail",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_breadcrumbs",
+        "default": true,
+        "label": "Show Breadcrumbs"
+      },
+      {
+        "type": "richtext",
+        "id": "sidebar_cats",
+        "label": "Sidebar Categories"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_top",
+        "default": 35
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_bottom",
+        "default": 35
+      },
+      {
+        "type": "range",
+        "id": "padding_top_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "px",
+        "label": "Padding Top Mobile",
+        "default": 40
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "px",
+        "label": "Padding Bottom Mobile",
+        "default": 40
+      }
+    ],
+    "blocks": [
+      {
+        "name": "Title",
+        "type": "text",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "label": "Show Date",
+            "id": "show_date",
+            "default": true
+          },
+          {
+            "type": "checkbox",
+            "label": "Show Social Links",
+            "id": "show_social",
+            "default": true
+          },
+          {
+            "type": "checkbox",
+            "label": "Show Article Tags",
+            "id": "show_tags",
+            "default": true
+          }
+        ]
+      },
+      {
+        "name": "Article Content",
+        "type": "content",
+        "limit": 1
+      },
+      {
+        "name": "Footer",
+        "type": "footer",
+        "limit": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "label": "Show Back to Articles",
+            "id": "show_back",
+            "default": true
+          },
+          {
+            "type": "checkbox",
+            "label": "Show Social Links",
+            "id": "show_social",
+            "default": true
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Blog Detail"
+      }
+    ]
+  }
+  {% endschema %}

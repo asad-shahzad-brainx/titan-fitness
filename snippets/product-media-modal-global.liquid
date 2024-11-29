@@ -1,0 +1,148 @@
+<modal-component>
+  <div
+    id="c-simpleModal"
+    class="c-modalSlider"
+    data-modal-slider
+    data-selected-variant-title="{{ product.selected_or_first_available_variant.title | escape }}"
+    role="dialog"
+    aria-label="{{ 'products.modal.label' | t }}"
+    aria-modal="true"
+  >
+    <div class="c-modalSlider-header">
+      <button type="button" class="c-modalSliderCloseBtn" data-modal-close-btn>
+        {% render 'icon-close-search', title: 'Close Lightbox Slider' %}
+      </button>
+    </div>
+    <div class="c-modalSlider-content">
+      <div class="c-modalSlider-body">
+        <div class="c-prodGallery">
+          <section
+            class="swiper-container c-prodGallery__slider"
+            role="region"
+            aria-label="{{ 'products.modal.label' | t }}"
+            data-prod-gallery-img
+          >
+            <div class="swiper-wrapper">
+              <p class="sr-only">
+                This is a carousel with product media. Use Next and Previous buttons to navigate, or jump to a slide.
+              </p>
+              {%- for media in product.media -%}
+                {%- liquid
+                  if section.settings.hide_variants and variant_images contains media.src or variant_images contains media.id
+                    assign variant_image = true
+                  else
+                    assign variant_image = false
+                  endif
+
+                  if product.selected_or_first_available_variant.featured_media != null
+                    assign media = product.selected_or_first_available_variant.featured_media
+                  endif
+                -%}
+                {% assign alt_text_parts = media.alt | split: '|' %}
+                {% assign variant_title = alt_text_parts[1]
+                  | strip
+                  | replace: ' ', '_'
+                  | replace: '.', ''
+                  | replace: '"', ''
+                  | replace: '”', ''
+                  | replace: '/', ''
+                  | replace: '-', ''
+                %}
+                {%  if variant_title == '' %}
+                  {% assign variant_title = product.selected_or_first_available_variant.featured_media.alt
+                    | strip
+                    | replace: ' ', '_'
+                    | replace: '.', ''
+                    | replace: '"', ''
+                    | replace: '”', ''
+                    | replace: '/', ''
+                    | replace: '-', ''                    
+                  %}
+                {% endif %}      
+                <div
+                  class="swiper-slide c-prodGallery__sliderImg {{ media.media_type }}"
+                  data-modal-product-media-gallery
+                  data-variant-title="{{ variant_title }}"
+                >
+                  <div class="swiper-zoom-container">
+                    {% render 'product-media',
+                      media: media,
+                      loop: section.settings.enable_video_looping,
+                      variant_image: variant_image,
+                      thumbs: false
+                    %}
+                  </div>
+                </div>
+              {%- endfor -%}
+            </div>
+            <button class="swiper-button-next" data-swiper-next><span aria-hidden="true">next</span></button>
+            <button class="swiper-button-prev" data-swiper-prev><span aria-hidden="true">prev</span></button>
+            <div class="swiper-pagination" data-swiper-pagination></div>
+          </section>
+
+          <div
+            class="swiper-container c-prodGallery__thumbs"
+            data-prod-gallery-thumb
+            role="region"
+            aria-label="{{ 'products.modal.label' | t }} Thumbs"
+          >
+            <div class="swiper-wrapper">
+              <p class="sr-only">
+                This is a carousel with product media thumbs. Use the thumbs to navigate, or jump to a slide.
+              </p>
+              {%- for media in product.media -%}
+                {%- liquid
+                  if section.settings.hide_variants and variant_images contains media.src or variant_images contains media.id
+                    assign variant_image = true
+                  else
+                    assign variant_image = false
+                  endif
+
+                  if product.selected_or_first_available_variant.featured_media != null
+                    assign media = product.selected_or_first_available_variant.featured_media
+                  endif
+                -%}
+                {% assign alt_text_parts = media.alt | split: '|' %}
+                {% assign variant_title = alt_text_parts[1]
+                  | strip
+                  | replace: ' ', '_'
+                  | replace: '.', ''
+                  | replace: '"', ''
+                  | replace: '”', ''
+                  | replace: '/', ''
+                  | replace: '-', ''                  
+                %}
+                {%  if variant_title == '' %}
+                  {% assign variant_title = product.selected_or_first_available_variant.featured_media.alt
+                    | strip
+                    | replace: ' ', '_'
+                    | replace: '.', ''
+                    | replace: '"', ''
+                    | replace: '”', ''
+                    | replace: '/', ''
+                    | replace: '-', ''                    
+                  %}
+                {% endif %}      
+                <button
+                  class="swiper-slide c-prodGallery__thumbsBtn {{ media.media_type }}"
+                  data-modal-product-media-thumbs
+                  data-variant-title="{{ variant_title }}"
+                  tabindex="-1"
+                  aria-current="true"
+                  aria-label="Go to view {{ forloop.index }} - {%if media.media_type == 'image'%}Image{% elsif media.media_type == 'video' %}Video{% endif %}"
+                >
+                  {% render 'product-media',
+                    media: media,
+                    loop: section.settings.enable_video_looping,
+                    variant_image: variant_image,
+                    thumbs: true
+                  %}
+                </button>
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</modal-component>

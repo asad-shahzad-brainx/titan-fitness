@@ -1,0 +1,12 @@
+<div class="c-notify" data-notify>
+  <button class="c-notify__close" data-notify-close>
+    {% render 'icon-filter-close', classes: 'c-notify__closeIcon' %}
+  </button>
+  {% form 'contact', id: 'c-notify__form' %}
+    {% if form.posted_successfully? %}
+      <p class="c-notify__message c-a2">{{ 'templates.contact.form.notify' | t }}</p>
+    {% endif %}
+    <input type="email" name="contact[email]" placeholder="Enter Your Email" class="c-notify__email c-f1" required>
+    <button type="submit" class="c-notify__submit c-btn c-btn--full c-btnPrimary c-a2">Sign Up</button>
+  {% endform %}
+</div>

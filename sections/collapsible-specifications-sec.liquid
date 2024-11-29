@@ -1,0 +1,249 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% assign _product = product.selected_or_first_available_variant %}
+
+{%- liquid
+  if product.metafields.custom.specifications_image_override.value != blank
+    assign measurementsImage = product.metafields.custom.specifications_image_override.value
+  else
+    assign measurementsImage = _product.featured_image
+    if measurementsImage == null
+      assign measurementsImage = product.featured_image
+    endif
+  endif
+
+  assign collapsibleClass = ''
+  if section.settings.expand_accordion == 'yes'
+    assign collapsibleClass = 'c-collapsibleSpecs__header--active'
+  endif
+-%}
+
+{% if _product.metafields.custom.specifications.value != blank %}
+  <section
+    class="c-collapsibleSpecs color-{{ section.settings.color_scheme }} section-{{ section.id }}-padding"
+    id="{{ section.settings.heading | replace: ' ', '' }}"
+    data-collapsible-specifications-section
+    data-section="{{ section.id }}"
+  >
+    <div class="o-pageWidth">
+      <collapsible-specifications-component data-product-specs>
+        <div class="c-collapsibleSpecs__row">
+          <div
+            class="c-collapsibleSpecs__header {{ collapsibleClass }}"
+            data-collapsible-specifications-section-header="true"
+            aria-expanded="{% if section.settings.expand_accordion == 'yes' %}true{% else %}false{% endif %}"
+            aria-controls="c-collapsibleSpecs__body-{{ section.id }}"
+            role="button"
+            tabindex="0"
+          >
+            <div class="c-collapsibleSpecs__heading">
+              {% if section.settings.heading != blank %}
+                {% render 'heading',
+                  classes: 'c-h3',
+                  level: section.settings.heading_tag,
+                  text: section.settings.heading
+                %}
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="c-collapsibleSpecs__body" id="c-collapsibleSpecs__body-{{ section.id }}">
+            <div class="c-collapsibleSpecs__content c-b1">
+              <div class="c-collapsibleSpecs__image">
+                {% if measurementsImage != blank %}
+                  <picture>
+                    <source media="(max-width:767px)" srcset="{{ measurementsImage | img_url: 'master' }}">
+                    {{
+                      measurementsImage
+                      | image_url: width: 800
+                      | image_tag: loading: 'lazy', class: 'c-collapsibleSpecs__img'
+                    }}
+                  </picture>
+                {% endif %}
+              </div>
+
+              <div class="c-collapsibleSpecs__specs">
+                {% assign _product = product.selected_or_first_available_variant %}
+                {% if _product.metafields.custom.specifications.value != blank %}
+                  {% assign jsonData = _product.metafields.custom.specifications.value %}
+                  {% for specs in jsonData.specifications %}
+                    <div class="c-collapsibleSpecs__specsHeading">
+                      {% render 'heading', classes: 'c-h4', level: 'h4', text: specs.section_title %}
+                    </div>
+                    <div class="c-collapsibleSpecs__specsInfo">
+                      {% for specsData in specs.section_specs %}
+                        <div class="c-collapsibleSpecs__specsSubHeading c-collapsibleSpecs__specsInfoColumn">
+                          <p class="c-b2 c-b2--regular">{{ specsData.spec_title }}</p>
+                          <strong class="c-b2 c-b2--strong">{{ specsData.spec_content }}</strong>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </collapsible-specifications-component>
+    </div>
+  </section>
+{% endif %}
+{% schema %}
+{
+  "name": "Collapsible Specs Block",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "label": "Expand Accordion Section ?",
+      "id": "expand_accordion",
+      "default": "yes",
+      "options": [
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "label": "Heading",
+      "id": "heading"
+    },
+    {
+      "type": "select",
+      "label": "Heading Tag",
+      "id": "heading_tag",
+      "default": "h3",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "label": "Image",
+      "id": "img",
+      "info": "Recommended size 2880 x 1440"
+    },
+    {
+      "type": "image_picker",
+      "label": "Mobile Image (Optional)",
+      "id": "img_mobile",
+      "info": "Recommended size 750 x 1000"
+    },
+    {
+      "type": "select",
+      "id": "img_width",
+      "label": "Image Width",
+      "default": "large",
+      "options": [
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        }
+      ]
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "background-2"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top Mobile",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom Mobile",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collapsible Specs Block"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}
