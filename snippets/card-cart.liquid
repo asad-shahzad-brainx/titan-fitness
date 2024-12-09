@@ -52,6 +52,12 @@
         <h2 class="c-lineItem__heading c-b1 c-b1--strong">{{ item.product.title | escape }}</h2>
       </a>
 
+      {% assign component_quantities = item.variant.metafields.custom.component_quantities.value %}
+      {% assign component_references = item.variant.metafields.custom.component_reference.value %}
+      {% if component_references and component_quantities %}
+        {% render 'item-components', item: item, component_references: component_references, component_quantities: component_quantities  %}
+      {% endif %}                  
+
       {% render 'simple-price', product: item.variant, showDiscount: true %}
 
       {% for option in item.options_with_values %}
