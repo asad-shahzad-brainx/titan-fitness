@@ -1,0 +1,306 @@
+{% comment %}
+  Renders product variant-picker
+
+  Accepts:
+  - product: {Object} product object.
+  - block: {Object} passing the block information.
+  - product_form_id: {String} Id of the product form to which the variant picker is associated.
+  - update_url: {Boolean} whether or not to update url when changing variants. If false, the url isn't updated. Default: true (optional).
+  Usage:
+  {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+{% endcomment %}
+{%- unless product.has_only_default_variant -%}
+  {% assign parentcollection = '' %}
+  {% if product.metafields.custom.parent_collection != blank %}
+    {% assign parentcollection = product.metafields.custom.parent_collection.value %}
+  {% endif %}
+  {% assign heights = '' %}
+  {% assign depths = '' %}
+  {% assign compareHeight = product.metafields.custom.rack_height | remove: '"' %}
+  {% assign compareDepths = product.metafields.custom.rack_depth | remove: '"' %}
+
+  {%- if block.settings.picker_type == 'button' -%}
+    <div class="c-variants">
+      <variant-radios
+        id="variant-radios-{{ section.id }}"
+        class="no-js-hidden"
+        data-section="{{ section.id }}"
+        data-url="{{ product.url }}"
+        {% if update_url == false %}
+          data-update-url="false"
+        {% endif %}
+        {{ block.shopify_attributes }}
+      >
+        {%- for option in product.options_with_values -%}
+          <fieldset class="js product-form__input" data-options data-option{{ forloop.index }}>
+            <span class="sr-only">
+              Making a selection with these options will cause content on this page to change and update the product
+              images.
+            </span>
+            <legend class="form__label c-b2 c-b2--regular">
+              <div>
+                Choose {{ option.name }}:
+                <strong id="c-selectedValue-{{ option.position }}">{{ option.selected_value }}</strong>
+              </div>
+            </legend>
+            {% if product.variants.size > 1 %}
+              {% render 'product-variant-options', product: product, option: option, block: block %}
+            {% endif %}
+          </fieldset>
+          {% if option.name contains 'color' or option.name contains 'Color' %}
+            {% if parentcollection.products.size > 0 %}
+              <product-dimensions>
+                <div class="products__url u-hide">
+                  {% for _product in parentcollection.products %}
+                    {% assign depths = depths | append: _product.metafields.custom.rack_depth | append: ',' %}
+                    {% assign heights = heights | append: _product.metafields.custom.rack_height | append: ',' %}
+                    <a
+                      href="{{ shop.url }}{{ _product.url }}"
+                      data-dimension="{{ _product.metafields.custom.rack_height |  remove: '"'  }}-{{ _product.metafields.custom.rack_depth |  remove: '"'  }}"
+                    >
+                      {{ _product.metafields.custom.rack_height | remove: '"' }}-
+                      {{- _product.metafields.custom.rack_depth | remove: '"' }}
+                    </a>
+                  {% endfor %}
+                  {% assign depths = depths | split: ',' | where_exp: 'depths', 'depths != ""' %}
+                  {% assign heights = heights | split: ',' | where_exp: 'heights', 'heights != ""' %}
+                  {% assign unique_heights = heights | uniq %}
+                  {% assign unique_depths = depths | uniq %}
+                </div>
+                <div class="product-form__input-height product-form__input--dimension product-form__input--dimension-height">
+                  <legend class="form__label c-b2--regular">
+                    <div>
+                      Choose Rack Height:
+                      <strong data-selected-height>
+                        {% for height in unique_heights %}
+                          {% assign heightValue = height | remove: '"' %}
+                          {% if compareHeight contains heightValue %}
+                            {{ height }}
+                          {% endif %}
+                        {% endfor %}
+                      </strong>
+                    </div>
+                  </legend>
+                  {% for height in unique_heights %}
+                    {% assign heightValue = height | remove: '"' %}
+                    <button
+                      class="c-radioInputLabel c-radioInputLabel--dimension{% if compareHeight contains heightValue %} c-radioInputLabel--dimension-selected{% endif %} c-b2"
+                      data-height="{{ heightValue }}"
+                      {% if compareHeight contains heightValue %}
+                        data-current-height
+                      {% endif %}
+                    >
+                      {{ height }}
+                    </button>
+                  {% endfor %}
+                </div>
+                <div class="product-form__depth product-form__input--dimension product-form__input--dimension-depth">
+                  <legend class="form__label c-b2--regular">
+                    <div>
+                      Choose Rack Depth:
+                      <strong data-selected-depth>
+                        {% for depth in unique_depths %}
+                          {% assign depthValue = depth | remove: '"' %}
+                          {% if compareDepths contains depthValue %}
+                            {{ depth }}
+                          {% endif %}
+                        {% endfor %}
+                      </strong>
+                    </div>
+                  </legend>
+                  {% for depth in unique_depths %}
+                    {% assign depthValue = depth | remove: '"' %}
+                    <button
+                      class="c-radioInputLabel c-radioInputLabel--dimension{% if compareDepths contains depthValue %} c-radioInputLabel--dimension-selected{% endif %} c-b2"
+                      data-depth="{{ depthValue }}"
+                      {% if compareDepths contains depthValue %}
+                        data-current-depth
+                      {% endif %}
+                    >
+                      {{ depth }}
+                    </button>
+                  {% endfor %}
+                </div>
+              </product-dimensions>
+            {% endif %}
+          {% endif %}
+        {%- endfor -%}
+        <script type="application/json">
+          [
+            {% for variant in product.variants %}
+              {% assign component_reference = variant.metafields.custom.component_reference.value  %}
+              {% assign total_price = 0 %}
+              {% assign total_compare_at_price = 0 %}
+              {% assign is_parent_available = true %}
+        
+              {% for child_variant in component_reference %}
+                {% if child_variant.available == false %}
+                  {% assign is_parent_available = false %}
+                {% endif %}
+                {% assign total_price = total_price | plus: child_variant.price %}
+                {% assign total_compare_at_price = total_compare_at_price | plus: child_variant.compare_at_price %}
+              {% endfor %}
+              {% if product.metafields.custom.bundle.value == "fixed" %}
+                  {% assign total_price = variant.price %}
+                  {% assign total_compare_at_price = variant.compare_at_price %}
+              {% endif %}
+              {
+                  "id": {{ variant.id }},
+                  "title": "{{ variant.title }}",
+                  "option1": "{{ variant.option1 }}",
+                  "option2": {{ variant.option2 | json }},
+                  "option3": {{ variant.option3 | json }},
+                  "sku": "{{ variant.sku }}",
+                  "requires_shipping": {{ variant.requires_shipping }},
+                  "taxable": {{ variant.taxable  }},
+                  "featured_image": {{ variant.featured_image | json }},
+                  "available": {{ is_parent_available }},
+                  "name": "{{ variant.name }}",
+                  "public_title": "{{ variant.public_title }}",
+                  "options": {{ variant.options | json }},
+                  "price": {{ total_price }},
+                  "weight": {{ variant.weight }},
+                  "compare_at_price": {{ total_compare_at_price }},
+                  "inventory_management": {{ variant.inventory_management | json }},
+                  "barcode": "{{ variant.barcode }}",
+                  "requires_selling_plan": {{ variant.requires_selling_plan }},
+                  "selling_plan_allocations": {{ variant.selling_plan_allocations | json }},
+                  "quantity_rule": {{ variant.quantity_rule | json }}
+                }{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ]
+        </script>
+        
+      </variant-radios>
+    </div>
+  {%- else -%}
+    <variant-selects
+      id="variant-selects-{{ section.id }}"
+      class="no-js-hidden"
+      data-section="{{ section.id }}"
+      data-url="{{ product.url }}"
+      {% if update_url == false %}
+        data-update-url="false"
+      {% endif %}
+      {{ block.shopify_attributes }}
+    >
+      {%- for option in product.options_with_values -%}
+        <div class="product-form__input product-form__input--dropdown">
+          <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
+            {{ option.name }}
+          </label>
+          <div class="select">
+            <select
+              id="Option-{{ section.id }}-{{ forloop.index0 }}"
+              class="select__select"
+              name="options[{{ option.name | escape }}]"
+              form="{{ product_form_id }}"
+            >
+              {% render 'product-variant-options', product: product, option: option, block: block %}
+            </select>
+            {% render 'icon-caret' %}
+          </div>
+        </div>
+      {%- endfor -%}
+
+      <script type="application/json">
+          [
+            {% for variant in product.variants %}
+              {% assign component_reference = variant.metafields.custom.component_reference.value  %}
+              {% assign total_price = 0 %}
+              {% assign total_compare_at_price = 0 %}
+              {% assign is_parent_available = true %}
+              {% for child_variant in component_reference %}
+                {% if child_variant.available == false %}
+                  {% assign is_parent_available = false %}
+                {% endif %}
+                {% assign total_price = total_price | plus: child_variant.price %}
+                {% assign total_compare_at_price = total_compare_at_price | plus: child_variant.compare_at_price %}
+              {% endfor %}
+              {% if product.metafields.custom.bundle.value == "fixed" %}
+                  {% assign total_price = variant.price %}
+                  {% assign total_compare_at_price = variant.compare_at_price %}
+              {% endif %}
+              {
+                  "id": {{ variant.id }},
+                  "title": "{{ variant.title }}",
+                  "option1": "{{ variant.option1 }}",
+                  "option2": {{ variant.option2 | json }},
+                  "option3": {{ variant.option3 | json }},
+                  "sku": "{{ variant.sku }}",
+                  "requires_shipping": {{ variant.requires_shipping }},
+                  "taxable": {{ variant.taxable  }},
+                  "featured_image": {{ variant.featured_image | json }},
+                  "available": {{ is_parent_available }},
+                  "name": "{{ variant.name }}",
+                  "public_title": "{{ variant.public_title }}",
+                  "options": {{ variant.options | json }},
+                  "price": {{ total_price }},
+                  "weight": {{ variant.weight }},
+                  "compare_at_price": {{ total_compare_at_price }},
+                  "inventory_management": {{ variant.inventory_management | json }},
+                  "barcode": "{{ variant.barcode }}",
+                  "requires_selling_plan": {{ variant.requires_selling_plan }},
+                  "selling_plan_allocations": {{ variant.selling_plan_allocations | json }},
+                  "quantity_rule": {{ variant.quantity_rule | json }}
+                }{% unless forloop.last %},{% endunless %}
+            {% endfor %}
+          ]
+        </script>
+    </variant-selects>
+  {%- endif -%}
+{%- endunless -%}
+
+
+<noscript class="product-form__noscript-wrapper-{{ section.id }}">
+  <div class="product-form__input{% if product.has_only_default_variant %} hidden{% endif %}">
+    <label class="form__label" for="Variants-{{ section.id }}">
+      {{- 'products.product.product_variants' | t -}}
+    </label>
+    <div class="select">
+      <select
+        name="id"
+        id="Variants-{{ section.id }}"
+        class="select__select"
+        form="{{ product_form_id }}"
+      >
+        {%- for variant in product.variants -%}
+          <option
+            {% if variant == product.selected_or_first_available_variant %}
+              selected="selected"
+            {% endif %}
+            {% if variant.available == false %}
+              disabled
+            {% endif %}
+            value="{{ variant.id }}"
+          >
+            {%- liquid
+              echo variant.title
+              echo variant.price | money | strip_html | prepend: ' - '
+              if variant.available == false
+                echo 'products.product.sold_out' | t | prepend: ' - '
+              endif
+              if variant.quantity_rule.increment > 1
+                echo 'products.product.quantity.multiples_of' | t: quantity: variant.quantity_rule.increment | prepend: ' - '
+              endif
+              if variant.quantity_rule.min > 1
+                echo 'products.product.quantity.minimum_of' | t: quantity: variant.quantity_rule.min | prepend: ' - '
+              endif
+              if variant.quantity_rule.max != null
+                echo 'products.product.quantity.maximum_of' | t: quantity: variant.quantity_rule.max | prepend: ' - '
+              endif
+              # TODO: enable theme-check once `item_count_for_variant` is accepted as valid filter
+              # theme-check-disable
+              assign cart_quantity = cart | item_count_for_variant: variant.id
+              # theme-check-enable
+              if cart_quantity > 0
+                echo 'products.product.quantity.in_cart_html' | t: quantity: cart_quantity | prepend: ' - '
+              endif
+            -%}
+          </option>
+        {%- endfor -%}
+      </select>
+      {% render 'icon-caret' %}
+    </div>
+  </div>
+</noscript>
